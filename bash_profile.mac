@@ -1,0 +1,124 @@
+# Setting up the path
+PATH=""
+PATH=${PATH}:/usr/local/opt/coreutils/libexec/gnubin
+PATH=${PATH}:/usr/local/opt/gnu-sed/libexec/gnubin
+PATH=${PATH}:/usr/local/opt/ruby/bin
+PATH=${PATH}:/usr/local/bin
+PATH=${PATH}:/usr/local/share/python
+PATH=${PATH}:/usr/bin
+PATH=${PATH}:/bin
+PATH=${PATH}:/usr/sbin
+PATH=${PATH}:/sbin
+PATH=${PATH}:/Users/feanil/usr/share/elasti_cache_cli/bin
+PATH=${PATH}:/Users/feanil/usr/share/elb_cli/bin
+PATH=${PATH}:/Users/feanil/usr/share/ec2_cli/bin
+export PATH
+
+# Setup man path
+MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
+
+# Setting up Virtual Env
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/src
+export VIRTUALENVWRAPPER_SCRIPT=/usr/local/share/python/virtualenvwrapper.sh
+source /usr/local/share/python/virtualenvwrapper_lazy.sh
+
+# Java / AWS CLI
+export JAVA_HOME=`/usr/libexec/java_home`
+export AWS_CREDENTIAL_FILE=/Users/feanil/.aws/aws.credentials
+export AWS_ELASTICACHE_HOME=/Users/feanil/usr/share/elasti_cache_cli
+export AWS_ELB_HOME=/Users/feanil/usr/share/elb_cli
+export AWS_ELB_URL=https://elasticloadbalancing.us-east-1.amazonaws.com
+export EC2_HOME=/Users/feanil/usr/share/ec2_cli
+export AWS_DEFAULT_REGION='us-east-1'
+
+# Vagrant Settings
+export VAGRANT_USE_VBOXFS=true
+
+# Aliases
+alias ls='ls -G --color'
+alias ll='ls -lh --color'
+
+# Git Bash Completion
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
+fi
+
+# OPAM configuration - For patdiff
+. /Users/feanil/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
+
+if [ "$BASH_VERSINFO" -ge 2 ]; then
+
+    shopt -s cdspell
+    shopt -s checkwinsize
+    shopt -s cmdhist
+
+    shopt -s histappend
+    shopt -s checkhash
+    shopt -s no_empty_cmd_completion
+
+    shopt -s execfail
+
+    HISTFILESIZE=10000
+    HISTDIR="$HOME/.bash_histories/`uname -n`"
+    [[ ! -d $HISTDIR ]] && mkdir -p "$HISTDIR"
+    HISTFILE="$HISTDIR/`date +%Y_%m`"
+    # Suppress duplicates, bare "ls" and bg,fg and exit
+
+    HISTIGNORE="&:ls:[bf]g:exit"
+fi
+
+h() {
+  ls ~/.bash_histories/*/* | sort | xargs grep -i "$1"
+} 
+
+awsenv() {
+  AWS_PROFILE=$1
+
+  if [ -n "$AWS_PROFILE" ]; then
+    rm ~/.aws
+    ln -s ~/.aws-$AWS_PROFILE $HOME/.aws
+  else
+    ls -ld ~/.aws*
+  fi
+}
+
+export PS1="\u@edx \w$ "
+
+sesame()
+{
+  MODE=$1
+  . ~/.sesame
+  EDITOR="/usr/bin/vi -n"
+  if [ "$MODE" != "w" ]; then
+    EDITOR="${EDITOR} -R"
+  fi
+  MESSAGE=$(export EDITOR && gpg -d ${SESAME_ROOT}/sesame.yml.${MY_KEY_ID}.gpg | vipe)
+  if [ "$MODE" == "w" ]; then
+    for id in ${RECIPIENTS}; do echo "${MESSAGE}" | gpg -r $id -o ${SESAME_ROOT}/sesame.yml.${id}.gpg -e; done;
+  fi
+}
+
+api-key()
+{
+  length=$1
+  cat /dev/urandom | gtr -dC A-Za-z0-9 | head -c${length}
+#  echo
+}
+
+password-gen()
+{
+  length=$1
+  cat /dev/urandom | tr -dC "A-Za-z0-9!@#$%^&*(){}[]/=?+" | head -c${length}
+#  echo
+}
+
+xkcd()
+{
+  word_len=$1
+  words=$2
+  word_len=${word_len:=10}
+  words=${words:=4}
+  shuf -n ${words} $HOME/.config/xkcd/xkcd-${word_len}.txt | tr '\n' ' '
+  echo
+}
