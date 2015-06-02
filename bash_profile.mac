@@ -1,3 +1,6 @@
+# Setup VI Commandline Behaviour
+set -o vi
+
 # Setting up the path
 PATH=""
 PATH=${PATH}:/usr/local/opt/coreutils/libexec/gnubin
@@ -20,8 +23,8 @@ MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 # Setting up Virtual Env
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/src
-export VIRTUALENVWRAPPER_SCRIPT=/usr/local/share/python/virtualenvwrapper.sh
-source /usr/local/share/python/virtualenvwrapper_lazy.sh
+export VIRTUALENVWRAPPER_SCRIPT=/usr/local/bin/virtualenvwrapper.sh
+source /usr/local/bin/virtualenvwrapper_lazy.sh
 
 # Java / AWS CLI
 export JAVA_HOME=`/usr/libexec/java_home`
@@ -32,12 +35,10 @@ export AWS_ELB_URL=https://elasticloadbalancing.us-east-1.amazonaws.com
 export EC2_HOME=/Users/feanil/usr/share/ec2_cli
 export AWS_DEFAULT_REGION='us-east-1'
 
-# Vagrant Settings
-export VAGRANT_USE_VBOXFS=true
-
 # Aliases
 alias ls='ls -G --color'
 alias ll='ls -lh --color'
+alias vim='nvim'
 
 # Git Bash Completion
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
