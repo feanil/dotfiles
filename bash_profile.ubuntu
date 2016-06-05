@@ -1,0 +1,71 @@
+PATH=${PATH}:${HOME}/.local/bin
+export PATH
+
+# Setting up Virtual Env
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/src
+export VIRTUALENVWRAPPER_SCRIPT=$HOME/.local/bin/virtualenvwrapper.sh
+source ${HOME}/.local/bin/virtualenvwrapper_lazy.sh
+
+# AWS Settings
+export AWS_DEFAULT_REGION='us-east-1'
+
+if [ "$BASH_VERSINFO" -ge 2 ]; then
+
+    shopt -s cdspell
+    shopt -s checkwinsize
+    shopt -s cmdhist
+
+    shopt -s histappend
+    shopt -s checkhash
+    shopt -s no_empty_cmd_completion
+
+    shopt -s execfail
+
+    HISTFILESIZE=10000
+    HISTDIR="$HOME/.bash_histories/`uname -n`"
+    [[ ! -d $HISTDIR ]] && mkdir -p "$HISTDIR"
+    HISTFILE="$HISTDIR/`date +%Y_%m`"
+    # Suppress duplicates, bare "ls" and bg,fg and exit
+
+    HISTIGNORE="&:ls:[bf]g:exit"
+fi
+
+h() {
+  ls ~/.bash_histories/*/* | sort | xargs grep -i "$1"
+} 
+
+awsenv() {
+  AWS_PROFILE=$1
+
+  if [ -n "$AWS_PROFILE" ]; then
+    rm ~/.aws
+    ln -s ~/.aws-$AWS_PROFILE $HOME/.aws
+  else
+    ls -ld ~/.aws*
+  fi
+}
+
+api-key()
+{
+  length=$1
+  cat /dev/urandom | gtr -dC A-Za-z0-9 | head -c${length}
+#  echo
+}
+
+password-gen()
+{
+  length=$1
+  cat /dev/urandom | tr -dC "A-Za-z0-9!@#$%^&*(){}[]/=?+" | head -c${length}
+#  echo
+}
+
+xkcd()
+{
+  word_len=$1
+  words=$2
+  word_len=${word_len:=10}
+  words=${words:=4}
+  shuf -n ${words} $HOME/.config/xkcd/xkcd-${word_len}.txt | tr '\n' ' '
+  echo
+}
