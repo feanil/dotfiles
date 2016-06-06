@@ -1,0 +1,13 @@
+[user]
+	email = feanil@edx.org
+	name = Feanil Patel
+
+[color]
+	ui = true
+
+[branch]
+	autosetuprebase = always
+	autosetupmerge = true
+
+[push]
+	default = current
