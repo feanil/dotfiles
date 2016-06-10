@@ -1,6 +1,9 @@
 PATH=${PATH}:${HOME}/.local/bin
 export PATH
 
+# Setup my editors
+export EDITOR=nvim
+
 # Setting up Virtual Env
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/src
@@ -69,3 +72,5 @@ xkcd()
   shuf -n ${words} $HOME/.config/xkcd/xkcd-${word_len}.txt | tr '\n' ' '
   echo
 }
+
+alias open=xdg-open
