@@ -6,7 +6,11 @@
 (evil-mode 1)
 
 (require 'powerline)
-(powerline-center-theme)
+(powerline-center-evil-theme)
+(set-face-attribute 'mode-line nil
+		    :background "DarkOrange"
+		    :foreground "Black"
+		    :box nil)
 
 (load-theme 'zenburn t)
 
