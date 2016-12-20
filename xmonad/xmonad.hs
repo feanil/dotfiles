@@ -1,4 +1,7 @@
-
+import XMonad
+import XMonad.Util.Run
+import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.DynamicLog
 import Graphics.X11.ExtraTypes.XF86
 import System.IO
 
@@ -19,8 +22,4 @@ main = do
                         , ppTitle = xmobarColor "green" "" . shorten 50
                         }
         , modMask = mod4Mask     -- Rebind Mod to the Windows key
-        } `additionalKeys`
-	[
---		, (( 0, xF86XK_MonBrightnessDown  ), spawn "xbacklight -dec 2 && xbacklight |  awk -F. '{ print $1 }' | xargs -I {} notify-send ' ' -R /tmp/displaynotification -i display -h int:value:{}")
---		, (( 0, xF86XK_MonBrightnessUp    ), spawn "xbacklight -inc 2 && xbacklight |  awk -F. '{ print $1 }' | xargs -I {} notify-send ' ' -R /tmp/displaynotification -i display -h int:value:{}")
-	]
+        }
