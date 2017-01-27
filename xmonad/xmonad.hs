@@ -12,6 +12,7 @@ main = do
      spawnPipe "killall xfce4-power-manager; xfce4-power-manager"
      spawnPipe "killall xscreensaver -nosplash; xscreensaver -nosplash"
      spawnPipe "synclient MaxTapTime=0"
+     spawnPipe "synclient TouchpadOff=1"
      spawnPipe "xloadimage personalize/lotus-wallpaper.jpg -onroot -fullscreen"
      xmproc <- spawnPipe "/usr/bin/xmobar /home/feanil/.config/xmobar/xmobarrc"
      xmonad $ defaultConfig
