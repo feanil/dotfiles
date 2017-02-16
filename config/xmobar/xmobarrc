@@ -1,0 +1,23 @@
+Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
+       , bgColor = "black"
+       , fgColor = "grey"
+       , position = TopW L 95 
+       , commands = [ Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run Swap [] 10
+                    , Run Date "%a %b %_d %l:%M" "date" 10
+		    , Run BatteryP ["BAT0"]
+		      ["-t", "<timeleft> <acstatus> (<left>%)",
+                       "-L", "10", "-H", "80", "-p", "3",
+                       "--", "-O", "<fc=green>Charging</fc> - ", "-i", "",
+		       "-o", "Battery",
+                       "-L", "-15", "-H", "-5",
+                       "-l", "red", "-m", "blue", "-h", "green"] 600
+		    , Run Wireless "wlp4s0" [] 600
+                    , Run StdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%StdinReader% }{ %wlp4s0wi% | %battery% | %cpu% | %memory% | %swap%  <fc=#ee9a00>%date%</fc>"
+       , overrideRedirect = False
+       }
