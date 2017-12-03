@@ -3,8 +3,6 @@ import XMonad.Util.Run
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Config.Xfce
 import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.DynamicLog
-import Graphics.X11.ExtraTypes.XF86
 import System.IO
 
 main = do
