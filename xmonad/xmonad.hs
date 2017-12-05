@@ -15,5 +15,5 @@ main = do
         , modMask = mod4Mask     -- Rebind Mod to the Windows key
         } `additionalKeys`
 	[ ((mod4Mask .|. shiftMask, xK_Return), spawn "xfce4-terminal")
-	, ((mod4Mask , xK_p), spawn "ulauncher")
+	, ((mod4Mask , xK_p), spawn "rofi -show run")
 	]
