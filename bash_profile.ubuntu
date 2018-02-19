@@ -1,4 +1,5 @@
 PATH=${PATH}:${HOME}/.local/bin
+PATH=${PATH}:/opt/cisco/anyconnect/bin
 export PATH
 
 # Setup my editors
@@ -52,7 +53,7 @@ awsenv() {
 api-key()
 {
   length=$1
-  cat /dev/urandom | gtr -dC A-Za-z0-9 | head -c${length}
+  cat /dev/urandom | tr -dC A-Za-z0-9 | head -c${length}
 #  echo
 }
 
@@ -74,3 +75,4 @@ xkcd()
 }
 
 alias open=xdg-open
+alias copy='xclip -selection c'
