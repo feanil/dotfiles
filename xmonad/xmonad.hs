@@ -7,7 +7,7 @@ import System.IO
 
 main = do
      spawnPipe "synclient MaxTapTime=0"
-     spawnPipe "synclient TouchpadOff=1"
+--     spawnPipe "synclient TouchpadOff=1"
      spawnPipe "setxkbmap -option 'ctrl:nocaps'"
      xmonad $ xfceConfig 
         { manageHook = manageDocks <+> manageHook defaultConfig
