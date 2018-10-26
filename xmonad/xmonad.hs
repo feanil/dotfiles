@@ -7,6 +7,7 @@ import System.IO
 
 main = do
      spawnPipe "killall xfce4-panel; xfce4-panel;"
+     spawnPipe "killall xautolock; xautolock -time 5 -locker 'gnome-screensaver-command -l';"
      spawnPipe "synclient MaxTapTime=0"
      spawnPipe "setxkbmap -option 'ctrl:nocaps'"
      xmonad $ xfceConfig 
