@@ -1,6 +1,6 @@
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
-HISTSIZE=1000000
+HISTSIZE=10000000
 SAVEHIST=10000000
 setopt appendhistory
 bindkey -e
@@ -79,6 +79,7 @@ plugins=(
     git
     virtualenvwrapper
     tmux
+    fzf
 )
 
 ZSH_TMUX_AUTOSTART=true
@@ -100,8 +101,11 @@ export LANG=en_US.UTF-8
 #   export EDITOR='mvim'
 # fi
 export EDITOR=nvim
-alias vim=nvim
+export LESS=-FRX
 
+
+alias vim=nvim
+alias open=xdg-open
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
@@ -116,3 +120,5 @@ alias vim=nvim
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+
+export PATH=$PATH:/home/feanil/.local/bin
