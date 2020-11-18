@@ -13,4 +13,3 @@
 	default = current
 [pager]
 	branch = false
-	diff = false
