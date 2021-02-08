@@ -14,8 +14,7 @@ Plug 'rust-lang/rust.vim'
 Plug 'cespare/vim-toml'
 Plug 'psf/black', { 'branch': 'stable' }
 Plug 'fisadev/vim-isort'
-"Plug 'ycm-core/YouCompleteMe'
-"Plug 'davidhalter/jedi-vim'
+Plug 'ycm-core/YouCompleteMe'
 " Make sure you use single quotes
 
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-alignPlug 'junegunn/vim-easy-align'
