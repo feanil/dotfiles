@@ -1,3 +1,11 @@
+" Disable python 2 support
+let g:loaded_python_provider = 0
+
+" Point to neovim virtualenv.
+let g:python3_host_prog = '/home/feanil/.virtualenvs/neovim/bin/python'
+
+let g:vim_isort_python_version = 'python3'
+
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'editorconfig/editorconfig-vim'
@@ -6,6 +14,7 @@ Plug 'rust-lang/rust.vim'
 Plug 'cespare/vim-toml'
 Plug 'psf/black', { 'branch': 'stable' }
 Plug 'fisadev/vim-isort'
+Plug 'ycm-core/YouCompleteMe'
 " Make sure you use single quotes
 
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-alignPlug 'junegunn/vim-easy-align'
@@ -41,3 +50,4 @@ call plug#end()
 autocmd BufWritePre *.py execute ':Black'
 autocmd BufWritePre *.py execute ':Isort'
 
+set number
