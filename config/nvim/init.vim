@@ -54,3 +54,7 @@ autocmd BufWritePre *.py execute ':Black'
 autocmd BufWritePre *.py execute ':Isort'
 
 set number
+set ruler
+
+nmap <C-n> :NERDTreeFind<CR>
+nmap <C-l> :FZF<CR>

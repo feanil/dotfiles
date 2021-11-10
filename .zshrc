@@ -122,3 +122,5 @@ alias open=xdg-open
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
 export PATH=$PATH:/home/feanil/.local/bin
+
+export PATH="$HOME/.poetry/bin:$PATH"
