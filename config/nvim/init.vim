@@ -1,6 +1,9 @@
 " Disable python 2 support
 let g:loaded_python_provider = 0
 
+" Set tsserver binary to a shell script so we can pass extra options
+let g:ycm_tsserver_binary_path = '/home/feanil/.local/bin/tsserverproxy.sh'
+
 " Point to neovim virtualenv.
 let g:python3_host_prog = '/home/feanil/.virtualenvs/neovim/bin/python'
 
