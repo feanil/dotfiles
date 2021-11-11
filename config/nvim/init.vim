@@ -11,11 +11,12 @@ let g:vim_isort_python_version = 'python3'
 
 call plug#begin('~/.local/share/nvim/plugged')
 
+" Code Editing
 Plug 'editorconfig/editorconfig-vim'
 Plug 'elmcast/elm-vim'
 Plug 'rust-lang/rust.vim'
 Plug 'cespare/vim-toml'
-Plug 'psf/black', { 'branch': 'stable' }
+Plug 'psf/black'
 Plug 'fisadev/vim-isort'
 Plug 'ycm-core/YouCompleteMe'
 " Make sure you use single quotes
