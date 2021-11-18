@@ -6,8 +6,10 @@ let g:ycm_tsserver_binary_path = '/home/feanil/.local/bin/tsserverproxy.sh'
 
 " Point to neovim virtualenv.
 let g:python3_host_prog = '/home/feanil/.virtualenvs/neovim/bin/python'
-
 let g:vim_isort_python_version = 'python3'
+
+let g:black_virtualenv = '/home/feanil/.virtualenvs/neovim-black'
+let g:black_linelength = 120
 
 call plug#begin('~/.local/share/nvim/plugged')
 
@@ -18,7 +20,9 @@ Plug 'rust-lang/rust.vim'
 Plug 'cespare/vim-toml'
 Plug 'psf/black'
 Plug 'fisadev/vim-isort'
-Plug 'ycm-core/YouCompleteMe'
+" Plug 'ycm-core/YouCompleteMe'
+Plug 'hashivim/vim-terraform'
+
 " Make sure you use single quotes
 
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-alignPlug 'junegunn/vim-easy-align'

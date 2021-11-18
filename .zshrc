@@ -87,6 +87,7 @@ plugins=(
     virtualenvwrapper
     tmux
     fzf
+    pass
 )
 
 ZSH_TMUX_AUTOSTART=true
