@@ -8,7 +8,7 @@ let g:ycm_tsserver_binary_path = '/home/feanil/.local/bin/tsserverproxy.sh'
 let g:python3_host_prog = '/home/feanil/.virtualenvs/neovim/bin/python'
 let g:vim_isort_python_version = 'python3'
 
-let g:black_virtualenv = '/home/feanil/.virtualenvs/neovim-black'
+let g:black_virtualenv = '/home/feanil/.virtualenvs/neovim'
 let g:black_linelength = 120
 
 call plug#begin('~/.local/share/nvim/plugged')
