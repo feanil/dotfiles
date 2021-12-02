@@ -14,6 +14,10 @@ bindkey -e
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+export PATH=$PATH:$HOME/.local/bin
+export PATH=$PATH:$HOME/.local/opt/node/bin
+export PATH="$HOME/.poetry/bin:$PATH"
+
 # Path to your oh-my-zsh installation.
 export ZSH="/home/feanil/.oh-my-zsh"
 
@@ -84,8 +88,8 @@ HYPHEN_INSENSITIVE="true"
 plugins=(
     cargo
     git
-    virtualenvwrapper
     tmux
+    virtualenvwrapper
     fzf
     pass
 )
@@ -129,6 +133,4 @@ alias open=xdg-open
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
-export PATH=$PATH:/home/feanil/.local/bin
-
-export PATH="$HOME/.poetry/bin:$PATH"
+alias cat='echo "Try \`bat\` Instead"'

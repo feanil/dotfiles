@@ -9,3 +9,17 @@ For getting the Yubikey working,
 
 Copy the .gnupg directory from a computere where its working.
 Then install these relevant debian things: https://github.com/drduh/YubiKey-Guide#debian-and-ubuntu
+
+
+Other tools to install
+======================
+A big list of options: https://github.com/ibraheemdev/modern-Unix
+
+
+bat
+---
+
+- `cat` replacement - https://github.com/sharkdp/bat
+
+Releases Page - https://github.com/sharkdp/bat/releases
+- Get the musl version which will be fully statically linked.

@@ -14,5 +14,5 @@ main = do
         } `additionalKeys`
 	[ ((mod4Mask .|. shiftMask, xK_Return), spawn "xfce4-terminal")
 	, ((mod4Mask , xK_p), spawn "rofi -show run")
-	, ((mod4Mask .|. shiftMask, xK_l), spawn "xfce4-screensaver-command -l")
+	, ((mod4Mask .|. shiftMask, xK_l), spawn "xdg-screensaver lock")
 	]
