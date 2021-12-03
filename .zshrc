@@ -134,3 +134,5 @@ alias open=xdg-open
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
 alias cat='echo "Try \`bat\` Instead"'
+export MCFLY_INTERFACE_VIEW=BOTTOM
+eval "$(mcfly init zsh)"
