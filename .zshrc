@@ -135,4 +135,5 @@ alias open=xdg-open
 
 alias cat='echo "Try \`bat\` Instead"'
 export MCFLY_INTERFACE_VIEW=BOTTOM
+export MCFLY_FUZZY=3
 eval "$(mcfly init zsh)"
