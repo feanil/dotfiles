@@ -9,6 +9,7 @@ let g:python3_host_prog = '/home/feanil/.virtualenvs/neovim/bin/python'
 let g:vim_isort_python_version = 'python3'
 
 let g:black_virtualenv = '/home/feanil/.virtualenvs/neovim'
+let g:black_linelength = 99
 
 call plug#begin('~/.local/share/nvim/plugged')
 
@@ -54,8 +55,13 @@ Plug 'hashivim/vim-terraform'
 " Initialize plugin system
 call plug#end()
 
-autocmd BufWritePre *.py execute ':Black'
-autocmd BufWritePre *.py execute ':Isort'
+" personal code should use black but forks should not.
+autocmd BufWritePre ~/src/personal/*.py execute ':Black'
+autocmd BufWritePre ~/src/personal/*.py execute ':Isort'
+
+" edX things are not using these yet but we should for hacking.
+autocmd BufWritePre ~/work/src/hacking/*.py execute ':Black'
+autocmd BufWritePre ~/work/src/hacking/*.py execute ':Isort'
 
 set number
 set ruler

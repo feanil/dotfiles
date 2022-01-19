@@ -86,7 +86,7 @@ HYPHEN_INSENSITIVE="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-    cargo
+    rust
     git
     tmux
     virtualenvwrapper
@@ -133,7 +133,7 @@ alias open=xdg-open
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
-alias cat='echo "Try \`bat\` Instead"'
+alias cat=bat
 export MCFLY_INTERFACE_VIEW=BOTTOM
-export MCFLY_FUZZY=3
+export MCFLY_FUZZY=2
 eval "$(mcfly init zsh)"
