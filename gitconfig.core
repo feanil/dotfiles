@@ -1,0 +1,40 @@
+[includeIf "gitdir:~/work/"]
+    path = src/dotfiles/gitconfig.work
+
+[includeIf "gitdir:~/src/"]
+    path = src/dotfiles/gitconfig.personal
+
+[color]
+    ui = true
+
+[branch]
+    autosetuprebase = always
+    autosetupmerge = true
+
+[push]
+    default = current
+[pager]
+    branch = false
+
+[core]
+    pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
+
+[diff]
+    colorMoved = default
+
+[delta]
+    navigate = true
+    line-numbers = true
+    features = decorations
+
+[delta "decorations"]
+    commit-decoration-style = blue ol
+    commit-style = raw
+    file-style = omit
+    hunk-header-decoration-style = blue box
+    hunk-header-file-style = red
+    hunk-header-line-number-style = "#067a00"
+    hunk-header-style = file line-number syntax

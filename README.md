@@ -1,3 +1,14 @@
+Git
+===
+Install git
+git clone git@github.com/feanil/dotfiles src/dotfiles
+ln -sf src/dotfiles/gitconfig.core ~/.gitconfig
+
+Update as necessary for work and personal paths.
+
+VIM
+===
+
 Install NeoVim
 Copy nvimrc to ~/.nvimrc
 Copy nvim directory to ~/.nvim
@@ -5,10 +16,12 @@ Copy nvim directory to ~/.nvim
 Open Vim and run `:PlugInstall`
 
 
-For getting the Yubikey working,
-
+For getting the Yubikey working
+===============================
 Copy the .gnupg directory from a computere where its working.
 Then install these relevant debian things: https://github.com/drduh/YubiKey-Guide#debian-and-ubuntu
+
+
 
 
 Other tools to install
