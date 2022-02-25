@@ -9,7 +9,7 @@ let g:python3_host_prog = '/home/feanil/.virtualenvs/neovim/bin/python'
 let g:vim_isort_python_version = 'python3'
 
 let g:black_virtualenv = '/home/feanil/.virtualenvs/neovim'
-let g:black_linelength = 99
+"let g:black_linelength = 99
 
 call plug#begin('~/.local/share/nvim/plugged')
 
@@ -22,7 +22,8 @@ Plug 'psf/black'
 Plug 'fisadev/vim-isort'
 " Plug 'ycm-core/YouCompleteMe'
 Plug 'hashivim/vim-terraform'
-
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeFind' }
+Plug 'junegunn/fzf'
 " Make sure you use single quotes
 
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-alignPlug 'junegunn/vim-easy-align'
@@ -62,6 +63,10 @@ autocmd BufWritePre ~/src/personal/*.py execute ':Isort'
 " edX things are not using these yet but we should for hacking.
 autocmd BufWritePre ~/work/src/hacking/*.py execute ':Black'
 autocmd BufWritePre ~/work/src/hacking/*.py execute ':Isort'
+
+" open edX things are using these
+autocmd BufWritePre ~/work/src/openedx/terraform-github/*.py execute ':Black'
+autocmd BufWritePre ~/work/src/openedx/terraform-github/*.py execute ':Isort'
 
 set number
 set ruler
