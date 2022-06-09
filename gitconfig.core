@@ -10,6 +10,9 @@
 [includeIf "gitdir:~/notes/org-notes/"]
     path = src/dotfiles/gitconfig.personal
 
+[init]
+    defaultBranch = main
+
 [color]
     ui = true
 
