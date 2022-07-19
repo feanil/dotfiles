@@ -15,7 +15,7 @@ bindkey -e
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 export PATH=$PATH:$HOME/.local/bin
-export PATH=$PATH:$HOME/.local/opt/node/bin
+export PATH=$PATH:$HOME/.yarn/bin
 export PATH="$HOME/.poetry/bin:$PATH"
 
 # Path to your oh-my-zsh installation.
@@ -118,6 +118,7 @@ export LESS=-FRX
 
 alias vim=nvim
 alias open=xdg-open
+alias copy=xclip -selection clipboard
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
