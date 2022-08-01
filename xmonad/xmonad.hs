@@ -24,7 +24,7 @@ myLayouts = desktopLayoutModifiers
 main = do
      spawnPipe "sleep 2; xfce4-panel -r;"
      spawnPipe "synclient MaxTapTime=0"
-     spawnPipe "killall xautolock; xautolock -time 5 -locker 'xdg-screensaver lock';"
+     spawnPipe "killall xautolock; xautolock -time 5 -locker 'xfce4-screensaver-command -l';"
      spawnPipe "setxkbmap -option 'ctrl:nocaps'"
      xmonad $ xfceConfig
         { modMask = mod4Mask     -- Rebind Mod to the Windows key
@@ -34,7 +34,7 @@ main = do
         } `additionalKeys`
         [ ((mod4Mask .|. shiftMask, xK_Return), spawn "xfce4-terminal")
         , ((mod4Mask , xK_p), spawn "rofi -show run")
-        , ((mod4Mask .|. shiftMask, xK_l), spawn "xdg-screensaver lock")
+        , ((mod4Mask .|. shiftMask, xK_l), spawn "xfce4-screensaver-command -l")
         , ((mod4Mask, xK_c), spawn "setxkbmap -option 'ctrl:nocaps'")
         -- Be able to toggle master pane location
         , ((mod4Mask, xK_r), sendMessage $ Toggle REFLECTX)
