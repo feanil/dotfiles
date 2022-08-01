@@ -60,16 +60,19 @@ call plug#end()
 autocmd BufWritePre ~/src/personal/*.py execute ':Black'
 autocmd BufWritePre ~/src/personal/*.py execute ':Isort'
 
-" edX things are not using these yet but we should for hacking.
+" Open edX things are not using these yet but we should for hacking.
 autocmd BufWritePre ~/work/src/hacking/*.py execute ':Black'
 autocmd BufWritePre ~/work/src/hacking/*.py execute ':Isort'
 
-" open edX things are using these
+" Open edX things that have black and isort enabled
 autocmd BufWritePre ~/work/src/openedx/terraform-github/*.py execute ':Black'
 autocmd BufWritePre ~/work/src/openedx/terraform-github/*.py execute ':Isort'
 
 set number
 set ruler
+
+" Reference https://stackoverflow.com/questions/30691466/what-is-difference-between-vims-clipboard-unnamed-and-unnamedplus-settings
+set clipboard^=unnamed,unnamedplus
 
 nmap <C-n> :NERDTreeFind<CR>
 nmap <C-l> :FZF<CR>
