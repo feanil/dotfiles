@@ -10,6 +10,7 @@ let g:vim_isort_python_version = 'python3'
 
 let g:black_virtualenv = '/home/feanil/.virtualenvs/neovim'
 "let g:black_linelength = 99
+let g:black_quiet = 1
 
 call plug#begin('~/.local/share/nvim/plugged')
 
@@ -65,8 +66,17 @@ autocmd BufWritePre ~/work/src/hacking/*.py execute ':Black'
 autocmd BufWritePre ~/work/src/hacking/*.py execute ':Isort'
 
 " Open edX things that have black and isort enabled
+" terraform-github
 autocmd BufWritePre ~/work/src/openedx/terraform-github/*.py execute ':Black'
 autocmd BufWritePre ~/work/src/openedx/terraform-github/*.py execute ':Isort'
+
+" docs.openedx.org
+autocmd BufWritePre ~/work/src/openedx/docs.openedx.org/*.py execute ':Black'
+autocmd BufWritePre ~/work/src/openedx/docs.openedx.org/*.py execute ':Isort'
+
+" my work related repos
+autocmd BufWritePre ~/work/src/feanil/*.py execute ':Black'
+autocmd BufWritePre ~/work/src/feanil/*.py execute ':Isort'
 
 set number
 set ruler
