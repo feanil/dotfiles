@@ -16,7 +16,6 @@ bindkey -e
 
 export PATH=$PATH:$HOME/.local/bin
 export PATH=$PATH:$HOME/.yarn/bin
-export PATH="$HOME/.poetry/bin:$PATH"
 
 # Path to your oh-my-zsh installation.
 export ZSH="/home/feanil/.oh-my-zsh"
