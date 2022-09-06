@@ -22,7 +22,7 @@ myLayouts = desktopLayoutModifiers
 
 
 main = do
-     spawnPipe "sleep 2; xfce4-panel -r;"
+     spawnPipe "sleep 4; xfce4-panel -r;"
      spawnPipe "synclient MaxTapTime=0"
      spawnPipe "killall xautolock; xautolock -time 5 -locker 'xfce4-screensaver-command -l';"
      spawnPipe "setxkbmap -option 'ctrl:nocaps'"
