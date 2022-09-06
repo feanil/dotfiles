@@ -22,6 +22,7 @@
 
 [push]
     default = current
+    pushOption = u
 
 [pager]
     branch = false
@@ -50,4 +51,13 @@
     hunk-header-style = file line-number syntax
 
 [pull]
-	rebase = true
+    rebase = true
+
+[gpg]
+    format = ssh
+
+[gpg "ssh"]
+	allowedSignersFile = /home/feanil/src/dotfiles/git_allowed_signers
+
+[commit]
+    gpgsign = true
