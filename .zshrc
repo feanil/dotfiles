@@ -91,6 +91,7 @@ plugins=(
     virtualenvwrapper
     fzf
     pass
+    poetry
 )
 
 ZSH_TMUX_AUTOSTART=true
@@ -142,3 +143,6 @@ eval "$(mcfly init zsh)"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export PATH="/home/feanil/work/src/openedx/edx-platform:$PATH"
+
+[[ -f ~/src/dotfiles/config/shellrc/gittree.sh ]] && source ~/src/dotfiles/config/shellrc/gittree.sh
