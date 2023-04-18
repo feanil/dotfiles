@@ -1,14 +1,14 @@
 [includeIf "gitdir:~/work/"]
-    path = src/dotfiles/gitconfig.work
+    path = src/feanil/dotfiles/gitconfig.work
 
 [includeIf "gitdir:~/src/"]
-    path = src/dotfiles/gitconfig.personal
+    path = src/feanil/dotfiles/gitconfig.personal
 
 [includeIf "gitdir:~/.password-store/"]
-    path = src/dotfiles/gitconfig.personal
+    path = src/feanil/dotfiles/gitconfig.personal
 
 [includeIf "gitdir:~/notes/org-notes/"]
-    path = src/dotfiles/gitconfig.personal
+    path = src/feanil/dotfiles/gitconfig.personal
 
 [init]
     defaultBranch = main
@@ -57,10 +57,12 @@
     format = ssh
 
 [gpg "ssh"]
-	allowedSignersFile = /home/feanil/src/dotfiles/git_allowed_signers
+	allowedSignersFile = /home/feanil/src/feanil/dotfiles/git_allowed_signers
 
 [commit]
     gpgsign = true
 
 [tag]
     gpgsign = true
+[user]
+	signingkey = /home/feanil/.ssh/id_ed25519.pub

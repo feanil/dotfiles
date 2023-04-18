@@ -6,12 +6,49 @@ ln -sf src/dotfiles/gitconfig.core ~/.gitconfig
 
 Update as necessary for work and personal paths.
 
+Setup Python and Virtualenvwrapper
+==================================
+
+Install python3 python3-dev
+Install virtualenvwrapper
+
+
+tmux
+====
+
+Install tmux
+ln -sf ~/src/feanil/dotfiles/tmux.conf .tmux.conf
+
+
+mcfly
+=====
+
+- `ctrl-r` replacement - https://github.com/cantino/mcfly
+
+Instructions - https://github.com/cantino/mcfly#installing-using-our-install-script
+
+Release Page - https://github.com/cantino/mcfly/releases
+- Get the musl version which will be fully statically linked.
+
+Setup ZSH and oh-my-zsh
+=======================
+
+Install zsh fzf
+Follow the instructions to install oh-my-zsh: https://ohmyz.sh/#install
+Install powerlevel10k theme https://github.com/romkatv/powerlevel10k#oh-my-zsh
+
+ln -sf ~/src/feanil/dotfiles/.p10k.zsh .p10k.zsh
+ln -sf ~/src/feanil/dotfiles/.zshrc .zshrc
+
+
 VIM
 ===
 
+sudo add-apt-repository ppa:neovim-ppa/stable
 Install NeoVim
-Copy nvimrc to ~/.nvimrc
-Copy nvim directory to ~/.nvim
+mkvirtualenv neovim
+pip install black isort neovim
+ln -sf ~/src/feanil/dotfiles/config/nvim .config/nvim
 
 Open Vim and run `:PlugInstall`
 
@@ -35,16 +72,6 @@ bat
 - `cat` replacement - https://github.com/sharkdp/bat
 
 Releases Page - https://github.com/sharkdp/bat/releases
-- Get the musl version which will be fully statically linked.
-
-mcfly
------
-
-- `ctrl-r` replacement - https://github.com/cantino/mcfly
-
-Instructions - https://github.com/cantino/mcfly#installing-using-our-install-script
-
-Release Page - https://github.com/cantino/mcfly/releases
 - Get the musl version which will be fully statically linked.
 
 exa
