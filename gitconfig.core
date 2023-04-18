@@ -1,8 +1,5 @@
-[includeIf "gitdir:~/work/"]
-    path = src/feanil/dotfiles/gitconfig.work
-
 [includeIf "gitdir:~/src/"]
-    path = src/feanil/dotfiles/gitconfig.personal
+    path = src/feanil/dotfiles/gitconfig.work
 
 [includeIf "gitdir:~/.password-store/"]
     path = src/feanil/dotfiles/gitconfig.personal
@@ -64,5 +61,3 @@
 
 [tag]
     gpgsign = true
-[user]
-	signingkey = /home/feanil/.ssh/id_ed25519.pub

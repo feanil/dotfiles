@@ -1,4 +1,4 @@
 [user]
     email = feanil@axim.org
     name = Feanil Patel
-    signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAxWEVmi5CYIs2zrwPPC9VrVigKz9e37p8WJsSkpGFQp feanil@axim.org"
+    signingkey = /home/feanil/.ssh/signing_public_key
