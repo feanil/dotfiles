@@ -92,12 +92,18 @@ plugins=(
     fzf
     pass
     brew
+    brew
+    nvm
 )
 
+zstyle ':omz:plugins:nvm' autoload yes
+
 ZSH_TMUX_AUTOSTART=true
-export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3.12
 
 source $ZSH/oh-my-zsh.sh
+
+export FZF_CTRL_T_COMMAND='rg --files --hidden --glob "!.git/*" 2>/dev/null'
 
 # User configuration
 
@@ -134,7 +140,7 @@ alias copy=xclip -selection clipboard
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
-alias cat=bat
+alias cat=batcat
 export MCFLY_INTERFACE_VIEW=BOTTOM
 export MCFLY_FUZZY=2
 eval "$(mcfly init zsh)"
