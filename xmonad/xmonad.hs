@@ -1,4 +1,5 @@
 import XMonad
+import XMonad.Actions.WithAll
 import XMonad.Util.Run
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Config.Xfce
@@ -22,12 +23,13 @@ myLayouts = desktopLayoutModifiers
 
 
 main = do
-     spawnPipe "sleep 4; xfce4-panel -r;"
+     -- spawnPipe "sleep 4; xfce4-panel -r;"
      spawnPipe "synclient MaxTapTime=0"
-     spawnPipe "killall xautolock; xautolock -time 5 -locker 'xfce4-screensaver-command -l';"
+     -- spawnPipe "killall xautolock; xautolock -time 5 -locker 'xfce4-screensaver-command -l';"
      spawnPipe "setxkbmap -option 'ctrl:nocaps'"
      xmonad $ xfceConfig
         { modMask = mod4Mask     -- Rebind Mod to the Windows key
+        -- , focusedBorderColor = "#000000"
         -- , layoutHook = myLayouts -- Change the possible layouts
         -- , layoutHook = desktopLayoutModifiers $ Mirror (Mirror (Tall 1 0.03 0.5)) -- Change the possible layouts
         , layoutHook = myLayouts
@@ -39,4 +41,5 @@ main = do
         -- Be able to toggle master pane location
         , ((mod4Mask, xK_r), sendMessage $ Toggle REFLECTX)
         , ((mod4Mask .|. shiftMask, xK_r), sendMessage $ Toggle REFLECTY)
+        , ((mod4Mask .|. shiftMask, xK_t), sinkAll)
         ]

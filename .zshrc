@@ -91,7 +91,7 @@ plugins=(
     virtualenvwrapper
     fzf
     pass
-    poetry
+    brew
 )
 
 ZSH_TMUX_AUTOSTART=true

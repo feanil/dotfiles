@@ -15,11 +15,9 @@
 
 [branch]
     autosetuprebase = always
-    autosetupmerge = true
 
 [push]
     default = current
-    pushOption = u
 
 [pager]
     branch = false
