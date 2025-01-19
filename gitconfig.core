@@ -1,5 +1,8 @@
-[includeIf "gitdir:~/src/"]
+[includeIf "gitdir:~/src/openedx/"]
     path = src/feanil/dotfiles/gitconfig.work
+
+[includeIf "gitdir:~/src/feanil/"]
+    path = src/feanil/dotfiles/gitconfig.personal
 
 [includeIf "gitdir:~/.password-store/"]
     path = src/feanil/dotfiles/gitconfig.personal

@@ -1,23 +1,55 @@
 Git
 ===
+
 Install git
-git clone git@github.com/feanil/dotfiles src/dotfiles
-ln -sf src/dotfiles/gitconfig.core ~/.gitconfig
+
+Install github cli - https://github.com/cli/cli/blob/trunk/docs/install_linux.md
+
+```
+git clone git@github.com/feanil/dotfiles
+
+ln -sf src/feanil/dotfiles/gitconfig.core ~/.gitconfig
+```
 
 Update as necessary for work and personal paths.
 
-Setup Python and Virtualenvwrapper
-==================================
+Setup ZSH and oh-my-zsh
+=======================
 
-Install python3 python3-dev
-Install virtualenvwrapper
+Install zsh - https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH
+
+fzf
+
+Follow the instructions to install oh-my-zsh: https://ohmyz.sh/#install
+
+Install powerlevel10k theme https://github.com/romkatv/powerlevel10k#oh-my-zsh
+
+ln -sf ~/src/feanil/dotfiles/.p10k.zsh .p10k.zsh
+ln -sf ~/src/feanil/dotfiles/.zshrc .zshrc
 
 
 tmux
 ====
 
 Install tmux
+
+```
 ln -sf ~/src/feanil/dotfiles/tmux.conf .tmux.conf
+```
+
+Setup Python and Virtualenvwrapper
+==================================
+
+Install uv - https://github.com/astral-sh/uv
+
+Setup python versions
+
+Install HomeBrew
+================
+
+https://brew.sh/
+
+
 
 
 mcfly
@@ -29,17 +61,6 @@ Instructions - https://github.com/cantino/mcfly#installing-using-our-install-scr
 
 Release Page - https://github.com/cantino/mcfly/releases
 - Get the musl version which will be fully statically linked.
-
-Setup ZSH and oh-my-zsh
-=======================
-
-Install zsh fzf
-Follow the instructions to install oh-my-zsh: https://ohmyz.sh/#install
-Install powerlevel10k theme https://github.com/romkatv/powerlevel10k#oh-my-zsh
-
-ln -sf ~/src/feanil/dotfiles/.p10k.zsh .p10k.zsh
-ln -sf ~/src/feanil/dotfiles/.zshrc .zshrc
-
 
 VIM
 ===
