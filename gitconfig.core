@@ -4,12 +4,6 @@
 [includeIf "gitdir:~/src/feanil/"]
     path = src/feanil/dotfiles/gitconfig.personal
 
-[includeIf "gitdir:~/.password-store/"]
-    path = src/feanil/dotfiles/gitconfig.personal
-
-[includeIf "gitdir:~/notes/org-notes/"]
-    path = src/feanil/dotfiles/gitconfig.personal
-
 [init]
     defaultBranch = main
 

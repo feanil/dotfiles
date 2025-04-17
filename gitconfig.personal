@@ -1,4 +1,4 @@
 [user]
-    email = feanil@gmail.com
+    email = github@feanil.com
     name = Feanil Patel
-    signingkey = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDH1ZvaTRhSE6eS7RNwUwFcTUbkK4/WFgO3TaW1S4Gr+9FKkJ8rzBusSCYPbwS6XgEJGnLB2qBQlnK3EvSmljKgVLBeruxiJInz1Gx7184NOvKDmE4+gFe46MThNl7FwA02NwYk0tnLHu9zYL3DjS1um6Txy/K0GEyqliGGq8tcuBwWb8xKlE7/aTEu1zaqH592q4JB7zDUV/iNuxUKU70EAu2gzHmmC7AhewYnVoVKou6YBvlvB5pfVgHgdcHF7EBV2mIidIwQzDDzDyLRg5zxTZ/ABfjhd/2En6o2NYEftOWqSbzfmEInBavvIeqyJExPvUVh7EWs635dZ6JB9NVhNJY0u58xTAItWL3ZNFlmv1ENvY2UKsU5b2NnLFopezuNreouIb6jE6zHqrT1z2jYfMYO3/hAMY3/NyCyvPrJiQd/obP7yDswq1fgXEKt3VJoMgMcEIBt/Yl7RhGwnawAO3HujFk+cAOmFA10zd4j3svRZ9ZMO8tjD5BSkonxE89YvLb5IPCLR4V1l85g3DVF8tHxp+SJWTX2ma8LGGg1/bjvkgAZ2P8w/qEF8Iw0ONgYUuaJvfDsHv9KjoBWXzbhjcnlfA2UFRTuNuGFRKkip6+BKhGcFBE1U5z1H6NufOc2f6rNwGoN/+0+kCcf/YnvCBx4j4c13k3DHelaH6FG2Q== feanil@gmail.com"
+    signingkey = /home/feanil/.ssh/signing_key.pub
