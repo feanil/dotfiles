@@ -136,7 +136,6 @@ alias copy=xclip -selection clipboard
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
-alias cat=batcat
 export MCFLY_INTERFACE_VIEW=BOTTOM
 export MCFLY_FUZZY=2
 eval "$(mcfly init zsh)"

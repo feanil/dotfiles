@@ -24,8 +24,10 @@ Follow the instructions to install oh-my-zsh: https://ohmyz.sh/#install
 
 Install powerlevel10k theme https://github.com/romkatv/powerlevel10k#oh-my-zsh
 
-ln -sf ~/src/feanil/dotfiles/.p10k.zsh .p10k.zsh
-ln -sf ~/src/feanil/dotfiles/.zshrc .zshrc
+```
+ln -sf ~/src/feanil/dotfiles/.p10k.zsh ~/.p10k.zsh
+ln -sf ~/src/feanil/dotfiles/.zshrc ~/.zshrc
+```
 
 
 tmux
@@ -34,7 +36,16 @@ tmux
 Install tmux
 
 ```
-ln -sf ~/src/feanil/dotfiles/tmux.conf .tmux.conf
+ln -sf ~/src/feanil/dotfiles/tmux.conf ~/.tmux.conf
+```
+
+Install HomeBrew
+================
+
+https://brew.sh/
+
+```
+brew install mcfly delta uv
 ```
 
 Setup Python and Virtualenvwrapper
@@ -43,13 +54,6 @@ Setup Python and Virtualenvwrapper
 Install uv - https://github.com/astral-sh/uv
 
 Setup python versions
-
-Install HomeBrew
-================
-
-https://brew.sh/
-
-
 
 
 mcfly
@@ -62,11 +66,19 @@ Instructions - https://github.com/cantino/mcfly#installing-using-our-install-scr
 Release Page - https://github.com/cantino/mcfly/releases
 - Get the musl version which will be fully statically linked.
 
+delta
+-----
+
+- Diffing Tools for git and other diffing.
+
+Release Page - https://github.com/dandavison/delta/releases
+- Get the musl version which will be fully statically linked.
+
 VIM
 ===
 
 sudo add-apt-repository ppa:neovim-ppa/stable
-Install NeoVim
+Install NeoVim - unless you're on debian in which case the default vim is neovim.
 mkvirtualenv neovim
 pip install black isort neovim
 ln -sf ~/src/feanil/dotfiles/config/nvim .config/nvim
@@ -110,10 +122,3 @@ jq
 `sudo apt install jq`
 
 
-delta
------
-
-- Diffing Tools for git and other diffing.
-
-Release Page - https://github.com/dandavison/delta/releases
-- Get the musl version which will be fully statically linked.
