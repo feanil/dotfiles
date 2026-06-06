@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+# claude-sandbox.sh — credential-isolated Claude Code sandbox
+#
+# Prerequisites:
+#   - Docker running (docker info)
+#   - 1Password CLI installed and signed in (op signin)
+#   - GitHub read-only token stored in 1Password at:
+#       op://Private/github.com/READ_ONLY_GITHUB_TOKEN
+#   - Image built at least once: claude-sandbox-build
+#
+# Source from .zshrc:
+#   source /path/to/dotfiles/claude_sandbox/claude-sandbox.sh
+#
+# Commands this provides:
+#   claude-sandbox        — run claude in the sandbox from the current directory
+#   claude-sandbox-shell  — open a bash shell in the sandbox for testing
+#   claude-sandbox-build  — build (or rebuild) the sandbox image
+
+CLAUDE_SANDBOX_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+CLAUDE_SANDBOX_IMAGE="claude-sandbox:latest"
+
+# Build or rebuild the sandbox image.
+# Your UID/GID are baked in at build time so file ownership matches the host.
+#
+# Override versions for a one-off build:
+#   PYTHON_VERSION=3.11 NODE_VERSION=22 claude-sandbox-build
+claude-sandbox-build() {
+    docker build \
+        --build-arg PYTHON_VERSION="${PYTHON_VERSION:-3.12}" \
+        --build-arg NODE_VERSION="${NODE_VERSION:-24}" \
+        --build-arg SANDBOX_UID="$(id -u)" \
+        --build-arg SANDBOX_GID="$(id -g)" \
+        -f "$CLAUDE_SANDBOX_DIR/Dockerfile" \
+        -t "$CLAUDE_SANDBOX_IMAGE" \
+        "$CLAUDE_SANDBOX_DIR"
+}
+
+# Run claude in a credential-isolated sandbox with the current directory mounted.
+#
+# What is NOT available inside the sandbox:
+#   ~/.aws, ~/.ssh (agent + keys), host env vars, ~/.netrc, ~/.config/gcloud, etc.
+#
+# What IS available:
+#   /workspace            — current directory, read/write
+#   ~/.claude             — claude login, config, and history (read/write)
+#   ~/.claude.json        — claude configuration file (read/write)
+#   ~/.gitconfig          — read-only
+#   ~/.config/nvim        — read-only (LazyVim config)
+#   ~/.local/share/nvim   — read/write (LazyVim plugins, persisted on host)
+#   ~/.local/state/nvim   — read/write (undo history, shada)
+#   ~/.local/cache/nvim   — read/write (TreeSitter parsers, etc.)
+#   ~/.ssh/git-signing-key — read-only, if present (for commit signing only)
+#
+# Any extra arguments are forwarded to claude:
+#   claude-sandbox "fix the tests"
+# Shared setup and docker run — takes the container command as arguments.
+_claude_sandbox_run() {
+    local -a extra_flags=()
+
+    if [[ -f "$HOME/.ssh/git-signing-key" ]]; then
+        extra_flags+=(-v "$HOME/.ssh/git-signing-key:/home/sandbox/.ssh/git-signing-key:ro")
+    fi
+
+    if ! docker image inspect "$CLAUDE_SANDBOX_IMAGE" &>/dev/null; then
+        echo "claude-sandbox: error: image '$CLAUDE_SANDBOX_IMAGE' not found — run claude-sandbox-build first" >&2
+        return 1
+    fi
+
+    local created created_epoch now_epoch
+    created=$(docker image inspect "$CLAUDE_SANDBOX_IMAGE" --format '{{.Created}}')
+    created_epoch=$(date -d "$created" +%s)
+    now_epoch=$(date +%s)
+    if (( now_epoch - created_epoch > 86400 )); then
+        echo "claude-sandbox: image is more than 24h old, rebuilding..." >&2
+        claude-sandbox-build || return 1
+    fi
+
+    local gh_token
+    if ! gh_token=$(op read "op://Private/github.com/READ_ONLY_GITHUB_TOKEN" 2>/dev/null); then
+        echo "claude-sandbox: error: could not read GitHub token from 1Password (is op signed in?)" >&2
+        return 1
+    fi
+    extra_flags+=(-e "GH_TOKEN=$gh_token")
+
+    # --network host: Docker's bridge NAT breaks claude's OAuth token validation
+    docker run -it --rm \
+        --network host \
+        -e HOME=/home/sandbox \
+        -v "$PWD:/workspace" \
+        -w /workspace \
+        -v "$HOME/.claude:/home/sandbox/.claude" \
+        -v "$HOME/.claude.json:/home/sandbox/.claude.json" \
+        -v "$HOME/.gitconfig:/home/sandbox/.gitconfig:ro" \
+        -v "$HOME/.config/nvim:/home/sandbox/.config/nvim:ro" \
+        -v "$HOME/.local/share/nvim:/home/sandbox/.local/share/nvim" \
+        -v "$HOME/.local/state/nvim:/home/sandbox/.local/state/nvim" \
+        -v "$HOME/.local/cache/nvim:/home/sandbox/.local/cache/nvim" \
+        "${extra_flags[@]}" \
+        "$CLAUDE_SANDBOX_IMAGE" \
+        "$@"
+}
+
+# Run claude in the sandbox from the current directory.
+# Any extra arguments are forwarded to claude: claude-sandbox "fix the tests"
+claude-sandbox() {
+    _claude_sandbox_run claude "$@"
+}
+
+# Open a bash shell in the sandbox from the current directory.
+# Extra arguments are passed to bash: claude-sandbox-shell -c "echo $HOME"
+claude-sandbox-shell() {
+    _claude_sandbox_run bash "$@"
+}
