@@ -29,12 +29,12 @@ main = do
      spawnPipe "setxkbmap -option 'ctrl:nocaps'"
      xmonad $ xfceConfig
         { modMask = mod4Mask     -- Rebind Mod to the Windows key
-        -- , focusedBorderColor = "#000000"
+        , focusedBorderColor = "#000000"
         -- , layoutHook = myLayouts -- Change the possible layouts
         -- , layoutHook = desktopLayoutModifiers $ Mirror (Mirror (Tall 1 0.03 0.5)) -- Change the possible layouts
         , layoutHook = myLayouts
         } `additionalKeys`
-        [ ((mod4Mask .|. shiftMask, xK_Return), spawn "xfce4-terminal")
+        [ ((mod4Mask .|. shiftMask, xK_Return), spawn "/home/feanil/.local/bin/kitty")
         , ((mod4Mask , xK_p), spawn "rofi -show run")
         , ((mod4Mask .|. shiftMask, xK_l), spawn "xfce4-screensaver-command -l")
         , ((mod4Mask, xK_c), spawn "setxkbmap -option 'ctrl:nocaps'")
