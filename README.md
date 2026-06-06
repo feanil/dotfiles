@@ -77,13 +77,7 @@ Release Page - https://github.com/dandavison/delta/releases
 VIM
 ===
 
-sudo add-apt-repository ppa:neovim-ppa/stable
-Install NeoVim - unless you're on debian in which case the default vim is neovim.
-mkvirtualenv neovim
-pip install black isort neovim
-ln -sf ~/src/feanil/dotfiles/config/nvim .config/nvim
-
-Open Vim and run `:PlugInstall`
+Install NeoVim (stable) and set up LazyVim: https://www.lazyvim.org/installation
 
 
 For getting the Yubikey working
