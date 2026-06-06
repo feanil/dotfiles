@@ -4,6 +4,9 @@
 [includeIf "gitdir:~/src/feanil/"]
     path = src/feanil/dotfiles/gitconfig.personal
 
+[user]
+    signingkey = ~/.ssh/signing_key.pub
+
 [init]
     defaultBranch = main
 
