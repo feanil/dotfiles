@@ -64,7 +64,7 @@ claude-sandbox-build        # build or rebuild the image
 | `~/.local/share/nvim` | Yes, read/write | LazyVim plugins |
 | `~/.local/state/nvim` | Yes, read/write | Undo history, shada |
 | `~/.local/cache/nvim` | Yes, read/write | TreeSitter parsers |
-| `~/.ssh/git-signing-key` | Yes, read-only | Only if present; signing only, not auth |
+| `~/.ssh/signing_key{,.pub}` | Yes, read-only | Only if present; matches `user.signingkey` in `gitconfig.core`. Signing only, not auth. |
 | `GH_TOKEN` | Yes | Read-only token from 1Password at startup |
 | `~/.aws` | **No** | |
 | `~/.ssh` (agent/keys) | **No** | |
@@ -89,9 +89,11 @@ Both need to be explicitly mounted.
 **Python** — no system `python` or `python3` symlink. Use `uv venv --python 3.12`
 to create project venvs. The python managed by uv is at `UV_PYTHON_INSTALL_DIR=/opt/uv-python`.
 
-**SSH signing without push** — mount `~/.ssh/git-signing-key` read-only and register
-it on GitHub as a *Signing Key* (not Authentication Key). The key can sign commits
-locally but cannot authenticate SSH transport, so `git push` over SSH is blocked.
+**SSH signing without push** — mount `~/.ssh/signing_key` (and `.pub`) read-only at
+the same path inside the container so the `user.signingkey = ~/.ssh/signing_key.pub`
+entry in `gitconfig.core` resolves correctly on both sides. Register the key on
+GitHub as a *Signing Key* (not Authentication Key) so it can sign commits locally
+but cannot authenticate SSH transport — `git push` over SSH stays blocked.
 
 ## Status
 

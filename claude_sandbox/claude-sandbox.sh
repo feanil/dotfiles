@@ -49,7 +49,7 @@ claude-sandbox-build() {
 #   ~/.local/share/nvim   — read/write (LazyVim plugins, persisted on host)
 #   ~/.local/state/nvim   — read/write (undo history, shada)
 #   ~/.local/cache/nvim   — read/write (TreeSitter parsers, etc.)
-#   ~/.ssh/git-signing-key — read-only, if present (for commit signing only)
+#   ~/.ssh/signing_key{,.pub} — read-only, if present (for commit signing only)
 #
 # Any extra arguments are forwarded to claude:
 #   claude-sandbox "fix the tests"
@@ -57,8 +57,11 @@ claude-sandbox-build() {
 _claude_sandbox_run() {
     local -a extra_flags=()
 
-    if [[ -f "$HOME/.ssh/git-signing-key" ]]; then
-        extra_flags+=(-v "$HOME/.ssh/git-signing-key:/home/sandbox/.ssh/git-signing-key:ro")
+    if [[ -f "$HOME/.ssh/signing_key" ]]; then
+        extra_flags+=(
+            -v "$HOME/.ssh/signing_key:/home/sandbox/.ssh/signing_key:ro"
+            -v "$HOME/.ssh/signing_key.pub:/home/sandbox/.ssh/signing_key.pub:ro"
+        )
     fi
 
     if ! docker image inspect "$CLAUDE_SANDBOX_IMAGE" &>/dev/null; then
