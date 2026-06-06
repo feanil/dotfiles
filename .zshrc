@@ -79,6 +79,10 @@ HYPHEN_INSENSITIVE="true"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
+# Automatically find and source virtualenvironments when entering a directory.
+PYTHON_AUTO_VRUN=true
+PYTHON_VENV_NAMES=".venv venv"
+
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -90,6 +94,10 @@ plugins=(
     fzf
     brew
     nvm
+    python
+    uv
+    virtualenvwrapper
+    kitty
 )
 
 zstyle ':omz:plugins:nvm' autoload yes
@@ -121,6 +129,7 @@ export LESS=-FRX
 alias vim=nvim
 alias open=xdg-open
 alias copy=xclip -selection clipboard
+alias rg="rg --type-add 'in:*.in'"
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
@@ -147,3 +156,8 @@ export NVM_DIR="$HOME/.nvm"
 export PATH="/home/feanil/work/src/openedx/edx-platform:$PATH"
 
 [[ -f ~/src/dotfiles/config/shellrc/gittree.sh ]] && source ~/src/dotfiles/config/shellrc/gittree.sh
+
+export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:/usr/local/lib/x86_64-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig"
+
+TUTOR_ROOT=/home/feanil/src/tutor/.venv/bin/tutor-main
+TUTOR_PLUGINS_ROOT=/home/feanil/src/tutor/.venv/bin/tutor-main-plugins
