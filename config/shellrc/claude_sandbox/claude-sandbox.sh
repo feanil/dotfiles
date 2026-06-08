@@ -9,7 +9,7 @@
 #   - Image built at least once: claude-sandbox-build
 #
 # Source from .zshrc:
-#   source /path/to/dotfiles/claude_sandbox/claude-sandbox.sh
+#   source /path/to/dotfiles/config/shellrc/claude_sandbox/claude-sandbox.sh
 #
 # Commands this provides:
 #   claude-sandbox        — run claude in the sandbox from the current directory

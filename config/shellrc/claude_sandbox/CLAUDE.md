@@ -25,7 +25,7 @@ want it to have accidental access to cloud credentials or SSH keys.
 
 Add to `.zshrc`:
 ```zsh
-source /path/to/claude_sandbox/claude-sandbox.sh
+source /path/to/dotfiles/config/shellrc/claude_sandbox/claude-sandbox.sh
 ```
 
 ### Build the image

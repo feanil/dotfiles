@@ -157,6 +157,8 @@ export PATH="/home/feanil/work/src/openedx/edx-platform:$PATH"
 
 [[ -f ~/src/dotfiles/config/shellrc/gittree.sh ]] && source ~/src/dotfiles/config/shellrc/gittree.sh
 
+[[ -f ~/src/feanil/dotfiles/config/shellrc/claude_sandbox/claude-sandbox.sh ]] && source ~/src/feanil/dotfiles/config/shellrc/claude_sandbox/claude-sandbox.sh
+
 export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:/usr/local/lib/x86_64-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig"
 
 TUTOR_ROOT=/home/feanil/src/tutor/.venv/bin/tutor-main
