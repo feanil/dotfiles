@@ -85,10 +85,17 @@ _claude_sandbox_run() {
     fi
     extra_flags+=(-e "GH_TOKEN=$gh_token")
 
-    # --network host: Docker's bridge NAT breaks claude's OAuth token validation
     docker run -it --rm \
+        `# Docker's bridge NAT breaks claude's OAuth token validation.` \
         --network host \
         -e HOME=/home/sandbox \
+        `# TERM is hardcoded rather than forwarded: Debian's base ncurses only` \
+        `# ships terminfo for a small set of TERM values (xterm-256color is in,` \
+        `# tmux-256color is not), so forwarding TERM=tmux-256color from a host` \
+        `# shell inside tmux would degrade ncurses programs in the container.` \
+        `# Truecolor is advertised separately via COLORTERM.` \
+        -e TERM=xterm-256color \
+        -e "COLORTERM=${COLORTERM:-truecolor}" \
         -v "$PWD:/workspace" \
         -w /workspace \
         -v "$HOME/.claude:/home/sandbox/.claude" \
