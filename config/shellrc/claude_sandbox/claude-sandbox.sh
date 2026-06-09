@@ -26,6 +26,8 @@ CLAUDE_SANDBOX_IMAGE="claude-sandbox:latest"
 #   PYTHON_VERSION=3.11 NODE_VERSION=22 claude-sandbox-build
 claude-sandbox-build() {
     docker build \
+        --no-cache \
+        --pull \
         --build-arg PYTHON_VERSION="${PYTHON_VERSION:-3.12}" \
         --build-arg NODE_VERSION="${NODE_VERSION:-24}" \
         --build-arg SANDBOX_UID="$(id -u)" \
