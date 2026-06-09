@@ -87,6 +87,15 @@ _claude_sandbox_run() {
     fi
     extra_flags+=(-e "GH_TOKEN=$gh_token")
 
+    # Resolve git identity on the host (where includeIf works) and pass the
+    # values in directly — the container can't follow the relative include paths
+    # because its $HOME differs from the host's.
+    local git_name git_email
+    git_name=$(git config user.name 2>/dev/null)
+    git_email=$(git config user.email 2>/dev/null)
+    [[ -n "$git_name" ]]  && extra_flags+=(-e "GIT_AUTHOR_NAME=$git_name"    -e "GIT_COMMITTER_NAME=$git_name")
+    [[ -n "$git_email" ]] && extra_flags+=(-e "GIT_AUTHOR_EMAIL=$git_email"  -e "GIT_COMMITTER_EMAIL=$git_email")
+
     docker run -it --rm \
         `# Docker's bridge NAT breaks claude's OAuth token validation.` \
         --network host \
