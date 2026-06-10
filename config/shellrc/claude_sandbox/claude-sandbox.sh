@@ -132,15 +132,35 @@ _claude_sandbox_run() {
 # Run claude in the sandbox from the current directory.
 # Any extra arguments are forwarded to claude: claude-sandbox "fix the tests"
 #
-# A statusline badge is layered on at launch via --settings (sandbox-only,
-# nothing persisted) so *you* can tell at a glance you're in the sandbox.
+# Two sandbox cues are layered on at launch (sandbox-only, nothing persisted):
+#   --settings              adds a statusline badge so *you* can tell at a glance.
+#   --append-system-prompt  tells *claude* it's sandboxed and what is / isn't there.
 claude-sandbox() {
     # Statusline merged on top of ~/.claude/settings.json for this launch only —
     # passed as an inline JSON string, so no second settings file is written.
     local statusline_settings='{"statusLine":{"type":"command","command":"claude-sandbox-statusline"}}'
 
+    local sandbox_note
+    sandbox_note=$(cat <<'EOF'
+You are running inside "claude-sandbox", a credential-isolated Docker container,
+not on the host machine.
+
+Available: the current directory at /workspace (read/write); your ~/.claude config
+and history; ~/.gitconfig and git identity; an SSH signing key (commit signing only,
+if present); and GH_TOKEN, a READ-ONLY GitHub token.
+
+Not available (do not try to use these): ~/.aws, SSH auth keys and the SSH agent,
+~/.config/gcloud, ~/.netrc, and host environment variables. Because GH_TOKEN is
+read-only and SSH auth is blocked, gh/git operations that write to GitHub (push,
+PR edits, etc.) will fail.
+
+Mention this sandbox context when it's relevant to what the user asks.
+EOF
+)
+
     _claude_sandbox_run claude \
         --settings "$statusline_settings" \
+        --append-system-prompt "$sandbox_note" \
         "$@"
 }
 
