@@ -13,11 +13,15 @@
 #
 # Commands this provides:
 #   claude-sandbox        — run claude in the sandbox from the current directory
-#   claude-sandbox-shell  — open a bash shell in the sandbox for testing
+#   claude-sandbox-run    — run an arbitrary command in the sandbox
+#                           (e.g. `claude-sandbox-run bash` for a shell)
 #   claude-sandbox-build  — build (or rebuild) the sandbox image
 
-CLAUDE_SANDBOX_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
-CLAUDE_SANDBOX_IMAGE="claude-sandbox:latest"
+# Exported so Claude Code's shell snapshot (which preserves env vars and
+# non-`_`-prefixed functions, but not bare top-level assignments) keeps them
+# available when these helpers run in a non-interactive subshell.
+export CLAUDE_SANDBOX_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+export CLAUDE_SANDBOX_IMAGE="claude-sandbox:latest"
 
 # Build or rebuild the sandbox image.
 # Your UID/GID are baked in at build time so file ownership matches the host.
@@ -56,7 +60,9 @@ claude-sandbox-build() {
 # Any extra arguments are forwarded to claude:
 #   claude-sandbox "fix the tests"
 # Shared setup and docker run — takes the container command as arguments.
-_claude_sandbox_run() {
+# Named without a `_` prefix so Claude Code's shell snapshot preserves it
+# (it strips `_`-prefixed functions when capturing the interactive shell).
+claude-sandbox-run() {
     local -a extra_flags=()
 
     if [[ -f "$HOME/.ssh/signing_key" ]]; then
@@ -211,14 +217,9 @@ EOF
 JSON
     fi
 
-    _claude_sandbox_run claude \
+    claude-sandbox-run claude \
         --settings "$sandbox_settings" \
         --append-system-prompt "$sandbox_note" \
         "$@"
 }
 
-# Open a bash shell in the sandbox from the current directory.
-# Extra arguments are passed to bash: claude-sandbox-shell -c "echo $HOME"
-claude-sandbox-shell() {
-    _claude_sandbox_run bash "$@"
-}

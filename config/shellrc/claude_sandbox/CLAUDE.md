@@ -49,10 +49,10 @@ PYTHON_VERSION=3.11 NODE_VERSION=22 claude-sandbox-build
 ## Commands
 
 ```bash
-claude-sandbox              # start claude in the current directory
-claude-sandbox-shell        # open a bash shell in the sandbox
-claude-sandbox-shell -c "…" # run a single command and exit
-claude-sandbox-build        # build or rebuild the image
+claude-sandbox                  # start claude in the current directory
+claude-sandbox-run bash         # open a bash shell in the sandbox
+claude-sandbox-run bash -c "…"  # run a single command and exit
+claude-sandbox-build            # build or rebuild the image
 ```
 
 ## What Is and Isn't Available
