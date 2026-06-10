@@ -132,14 +132,11 @@ _claude_sandbox_run() {
 # Run claude in the sandbox from the current directory.
 # Any extra arguments are forwarded to claude: claude-sandbox "fix the tests"
 #
-# Two sandbox cues are layered on at launch (sandbox-only, nothing persisted):
-#   --settings              adds a statusline badge so *you* can tell at a glance.
+# Two sandbox cues are layered on at launch:
+#   --settings              points claude at the sandbox profile (statusline badge
+#                           so *you* can tell at a glance, plus sandbox-only perms).
 #   --append-system-prompt  tells *claude* it's sandboxed and what is / isn't there.
 claude-sandbox() {
-    # Statusline merged on top of ~/.claude/settings.json for this launch only —
-    # passed as an inline JSON string, so no second settings file is written.
-    local statusline_settings='{"statusLine":{"type":"command","command":"claude-sandbox-statusline"}}'
-
     local sandbox_note
     sandbox_note=$(cat <<'EOF'
 You are running inside "claude-sandbox", a credential-isolated Docker container,
@@ -183,8 +180,39 @@ Mention this sandbox context when it's relevant to what the user asks.
 EOF
 )
 
+    # Sandbox settings profile, loaded only inside the sandbox via --settings.
+    # It carries the statusline badge and any permissions you're willing to grant
+    # in the credential-isolated sandbox but NOT to general, un-sandboxed claude.
+    # Host claude never loads this file (it isn't one of claude's standard settings
+    # sources), so anything you put here stays walled off from privileged claude —
+    # which is the only isolation boundary we actually care about. Sharing one file
+    # across concurrent sandbox runs is fine; we're not isolating sandboxes from
+    # each other.
+    #
+    # Caveat: claude persists interactively-"remembered" permissions to
+    # .claude/settings.local.json, which is host-shared through the /workspace
+    # mount — so a "yes, don't ask again" click inside the sandbox CAN reach
+    # privileged claude. Keep the perms you want broadly in this profile so the
+    # sandbox rarely has to prompt, and that path stays closed.
+    local sandbox_settings=".claude/settings.sandbox.json"
+
+    # Seed a default profile on first use: the statusline badge plus acceptEdits so
+    # file edits don't prompt. Add your broad sandbox-only permissions here.
+    mkdir -p .claude
+    if [[ ! -f "$sandbox_settings" ]]; then
+        cat > "$sandbox_settings" <<'JSON'
+{
+  "statusLine": { "type": "command", "command": "claude-sandbox-statusline" },
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": []
+  }
+}
+JSON
+    fi
+
     _claude_sandbox_run claude \
-        --settings "$statusline_settings" \
+        --settings "$sandbox_settings" \
         --append-system-prompt "$sandbox_note" \
         "$@"
 }

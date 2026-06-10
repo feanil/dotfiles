@@ -13,7 +13,8 @@ want it to have accidental access to cloud credentials or SSH keys.
   gh, git, neovim (stable), ripgrep, fd, jq
 - `claude-sandbox.sh` — shell functions to source from `.zshrc`
 - `statusline.sh` — baked into the image as `claude-sandbox-statusline`; renders the
-  `🧪 SANDBOX` badge. Wired up at launch via `--settings`, never in `settings.json`.
+  `🧪 SANDBOX` badge. Referenced from the sandbox settings profile (see below),
+  never from the host's `settings.json`.
 
 ## Setup
 
@@ -80,19 +81,51 @@ you're in. Three cues make it obvious, all driven off the `CLAUDE_SANDBOX=1` env
 var set on the container:
 
 - **Statusline badge** — a `🧪 SANDBOX` badge (black on yellow) plus model and
-  cwd. Rendered by `claude-sandbox-statusline` (baked into the image) and wired up
-  at launch with `claude --settings '{"statusLine":{...}}'`. Passing it as an inline
-  JSON string means it merges on top of `~/.claude/settings.json` for that launch
-  only — **no second settings file is written**, and the host Claude never shows it.
+  cwd. Rendered by `claude-sandbox-statusline` (baked into the image) and declared
+  in the sandbox settings profile (`.claude/settings.sandbox.json`), which
+  `claude-sandbox` loads at launch via `claude --settings`. The host Claude never
+  loads that profile, so it never shows the badge.
 - **System-prompt note** — `claude-sandbox` passes `--append-system-prompt` with a
   short note telling Claude it's sandboxed and what is / isn't available, so Claude
   itself can tell. Sandbox-only; nothing is written to the shared `~/.claude/CLAUDE.md`.
 - **`CLAUDE_SANDBOX=1`** — available to any script or agent that wants to detect the
   sandbox.
 
-Both `~/.claude/settings.json` and `~/.claude/CLAUDE.md` are mounted read/write from
-the host, so neither cue is configured there — that would leak onto the host Claude.
-Both are layered on at launch via CLI flags instead.
+`~/.claude/settings.json` and `~/.claude/CLAUDE.md` are mounted read/write from the
+host, so neither cue is configured there — that would leak onto the host Claude. The
+badge lives in the sandbox-only profile and the note is layered on via a CLI flag.
+
+## Sandbox permissions (isolating sandbox grants from privileged Claude)
+
+The point of the sandbox is to run Claude with broad permissions you'd never want
+it to have in general, un-sandboxed use. The credential isolation is the real safety
+boundary; the permission system just controls prompting. The mechanism for keeping
+sandbox grants out of the host:
+
+- **`.claude/settings.sandbox.json`** — the sandbox settings profile, loaded only
+  inside the sandbox via `claude --settings <file>`. `claude-sandbox` seeds it on
+  first use with the statusline badge and `permissions.defaultMode: "acceptEdits"`;
+  add whatever broad `permissions.allow` rules you want here. Host Claude never loads
+  this file (it isn't one of Claude's standard settings sources: user
+  `~/.claude/settings.json`, project `.claude/settings.json`, local
+  `.claude/settings.local.json`), so anything you put here is walled off from
+  privileged Claude. Permission arrays *merge* across sources, so the profile's
+  `allow` rules are additive on top of whatever the standard sources grant.
+- Sharing one profile across concurrent sandbox runs is fine — the boundary we care
+  about is host vs. sandbox, not sandbox vs. sandbox.
+- **Known gap:** an interactively-"remembered" permission ("yes, don't ask again")
+  persists to `.claude/settings.local.json`, which is host-shared through the
+  `/workspace` mount — so it *can* reach privileged Claude. Mitigation: keep the
+  permissions you want broadly in the profile so the sandbox rarely has to prompt.
+  `--setting-sources user,project` (dropping `local`) would stop the sandbox from
+  even loading that file, but where remembered rules then get written is undocumented
+  — verify before relying on it.
+
+Gitignore in the projects you run the sandbox against: `.claude/settings.local.json`
+is throwaway machine-local state and should always be ignored. `.claude/settings.sandbox.json`
+is the profile you curate — ignore it if it's personal, or commit it to share a sandbox
+permission profile with the team. A global `~/.config/git/ignore` entry covers every
+repo at once for the local file.
 
 ## 1Password prompt
 
