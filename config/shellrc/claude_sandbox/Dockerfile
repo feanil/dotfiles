@@ -62,6 +62,10 @@ RUN ARCH=$(uname -m) && \
 # Claude Code (installed globally, accessible to all users)
 RUN npm install -g @anthropic-ai/claude-code
 
+# Sandbox statusline badge — wired up at launch via --settings in claude-sandbox.sh
+COPY statusline.sh /usr/local/bin/claude-sandbox-statusline
+RUN chmod +x /usr/local/bin/claude-sandbox-statusline
+
 # Create sandbox user with UID/GID matching the host — ensures mounted files are owned correctly
 RUN groupadd -g ${SANDBOX_GID} sandbox && \
     useradd -u ${SANDBOX_UID} -g ${SANDBOX_GID} -m -s /bin/bash sandbox

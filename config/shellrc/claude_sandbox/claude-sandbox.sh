@@ -106,6 +106,8 @@ _claude_sandbox_run() {
         `# Docker's bridge NAT breaks claude's OAuth token validation.` \
         --network host \
         -e HOME=/home/sandbox \
+        `# Marks the environment as the sandbox — drives the statusline badge.` \
+        -e CLAUDE_SANDBOX=1 \
         `# TERM is hardcoded rather than forwarded: Debian's base ncurses only` \
         `# ships terminfo for a small set of TERM values (xterm-256color is in,` \
         `# tmux-256color is not), so forwarding TERM=tmux-256color from a host` \
@@ -129,8 +131,17 @@ _claude_sandbox_run() {
 
 # Run claude in the sandbox from the current directory.
 # Any extra arguments are forwarded to claude: claude-sandbox "fix the tests"
+#
+# A statusline badge is layered on at launch via --settings (sandbox-only,
+# nothing persisted) so *you* can tell at a glance you're in the sandbox.
 claude-sandbox() {
-    _claude_sandbox_run claude "$@"
+    # Statusline merged on top of ~/.claude/settings.json for this launch only —
+    # passed as an inline JSON string, so no second settings file is written.
+    local statusline_settings='{"statusLine":{"type":"command","command":"claude-sandbox-statusline"}}'
+
+    _claude_sandbox_run claude \
+        --settings "$statusline_settings" \
+        "$@"
 }
 
 # Open a bash shell in the sandbox from the current directory.
