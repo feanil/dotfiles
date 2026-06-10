@@ -39,6 +39,16 @@ Install tmux
 ln -sf ~/src/feanil/dotfiles/tmux.conf ~/.tmux.conf
 ```
 
+Claude Code
+===========
+
+Global instructions for Claude Code live in `claude/CLAUDE.md`. Symlink it into
+`~/.claude/` so Claude picks it up across all projects:
+
+```
+ln -sf ~/src/feanil/dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
+```
+
 Install HomeBrew
 ================
 
