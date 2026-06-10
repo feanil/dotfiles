@@ -13,14 +13,20 @@ ARG NODE_VERSION
 ARG SANDBOX_UID
 ARG SANDBOX_GID
 
-# Base system tools (including LazyVim deps: ripgrep, fd)
+# Base system tools (including LazyVim deps: ripgrep, fd). build-essential,
+# default-libmysqlclient-dev, and pkg-config let C-extension Python packages
+# such as mysqlclient build from source (uv's standalone Python ships its own
+# headers, so no python3-dev is needed).
 RUN apt-get update && apt-get install -y \
+        build-essential \
         ca-certificates \
         curl \
+        default-libmysqlclient-dev \
         fd-find \
         git \
         gnupg \
         jq \
+        pkg-config \
         ripgrep \
         unzip \
     && ln -sf /usr/bin/fdfind /usr/local/bin/fd \
