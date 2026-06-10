@@ -80,6 +80,12 @@ _claude_sandbox_run() {
         claude-sandbox-build || return 1
     fi
 
+    # op read may trigger a 1Password authorization prompt (biometric/system
+    # auth). Explain why before it appears so it isn't a mystery prompt.
+    echo "claude-sandbox: reading the read-only GitHub token from 1Password" >&2
+    echo "  (op://Private/github.com/READ_ONLY_GITHUB_TOKEN) to pass into the sandbox as GH_TOKEN." >&2
+    echo "  1Password may prompt you to authorize access." >&2
+
     local gh_token
     if ! gh_token=$(op read "op://Private/github.com/READ_ONLY_GITHUB_TOKEN" 2>/dev/null); then
         echo "claude-sandbox: error: could not read GitHub token from 1Password (is op signed in?)" >&2
