@@ -12,6 +12,8 @@ want it to have accidental access to cloud credentials or SSH keys.
 - `Dockerfile` — Debian bookworm-slim image with claude, node 24, uv + python 3.12,
   gh, git, neovim (stable), ripgrep, fd, jq
 - `claude-sandbox.sh` — shell functions to source from `.zshrc`
+- `statusline.sh` — baked into the image as `claude-sandbox-statusline`; renders the
+  `🧪 SANDBOX` badge. Wired up at launch via `--settings`, never in `settings.json`.
 
 ## Setup
 
@@ -70,6 +72,33 @@ claude-sandbox-build        # build or rebuild the image
 | `~/.ssh` (agent/keys) | **No** | |
 | `~/.netrc`, `~/.config/gcloud` | **No** | |
 | Other host env vars | **No** | |
+
+## Telling You're in the Sandbox
+
+The sandbox runs Claude *inside* Claude, so it's easy to lose track of which one
+you're in. Three cues make it obvious, all driven off the `CLAUDE_SANDBOX=1` env
+var set on the container:
+
+- **Statusline badge** — a `🧪 SANDBOX` badge (black on yellow) plus model and
+  cwd. Rendered by `claude-sandbox-statusline` (baked into the image) and wired up
+  at launch with `claude --settings '{"statusLine":{...}}'`. Passing it as an inline
+  JSON string means it merges on top of `~/.claude/settings.json` for that launch
+  only — **no second settings file is written**, and the host Claude never shows it.
+- **System-prompt note** — `claude-sandbox` passes `--append-system-prompt` with a
+  short note telling Claude it's sandboxed and what is / isn't available, so Claude
+  itself can tell. Sandbox-only; nothing is written to the shared `~/.claude/CLAUDE.md`.
+- **`CLAUDE_SANDBOX=1`** — available to any script or agent that wants to detect the
+  sandbox.
+
+Both `~/.claude/settings.json` and `~/.claude/CLAUDE.md` are mounted read/write from
+the host, so neither cue is configured there — that would leak onto the host Claude.
+Both are layered on at launch via CLI flags instead.
+
+## 1Password prompt
+
+Before reading the GitHub token, `claude-sandbox` prints why it's about to call
+`op read`, so the 1Password authorization prompt (biometric/system auth) isn't a
+mystery.
 
 ## Design Notes
 
