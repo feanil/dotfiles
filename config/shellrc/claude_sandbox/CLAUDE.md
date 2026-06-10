@@ -100,6 +100,46 @@ Before reading the GitHub token, `claude-sandbox` prints why it's about to call
 `op read`, so the 1Password authorization prompt (biometric/system auth) isn't a
 mystery.
 
+## Privileged action handoff
+
+The sandbox can *do* work but lacks the credentials to push, open PRs, deploy, etc.
+When claude hits such an action it doesn't improvise around it — it follows a handoff
+protocol baked into the injected system-prompt note (`--append-system-prompt` in
+`claude-sandbox`):
+
+- **Artifact handoff** — claude finishes everything it can locally and commits to a
+  branch (or writes a patch), so the privileged step only has to *transmit* the
+  result, never re-derive it. This keeps execution close to the moment with the most
+  context, and shrinks the privileged surface to pure transmission.
+- **Structured queue** — the residual privileged steps are appended to `PRIVILEGED.md`
+  in `/workspace` (host-visible) as concrete, paste-ready commands, one status-tracked
+  block per action:
+
+  ```markdown
+  ## [ ] Push branch and open PR for the auth refactor
+  - **Why:** sandbox GH_TOKEN is read-only; push + PR creation need write access.
+  - **cwd:** `/workspace`
+  - **Artifact:** local branch `auth-refactor` (commits already made in the sandbox)
+  - **Run:**
+    ```bash
+    git push -u origin auth-refactor
+    gh pr create --draft --fill
+    ```
+  ```
+
+You then consume the queue from a **monitored privileged session** — a normal
+(non-sandboxed) claude or shell with full credentials — reviewing each block, running
+it, and changing `[ ]` to `[x]`. The queue is never auto-executed: review is the
+safeguard, since a confused or injected sandbox claude could otherwise queue something
+unwanted.
+
+This is advisory (system-prompt driven), not enforced. A `PreToolUse` hook could *make*
+claude follow it and capture the exact command verbatim, but that adds a brittle
+pattern list and gates every Bash call, so it's deliberately left out for now.
+
+`PRIVILEGED.md` is transient handoff state, not project content — consider gitignoring
+it in the projects you run the sandbox against.
+
 ## Design Notes
 
 **`--network host`** — required. Docker's bridge NAT breaks claude's OAuth token
