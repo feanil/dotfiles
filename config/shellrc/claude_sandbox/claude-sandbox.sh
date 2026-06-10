@@ -154,6 +154,31 @@ Not available (do not try to use these): ~/.aws, SSH auth keys and the SSH agent
 read-only and SSH auth is blocked, gh/git operations that write to GitHub (push,
 PR edits, etc.) will fail.
 
+When a task needs an action you cannot perform here (anything requiring those
+missing credentials — git push, gh PR create/merge/edit, AWS, gcloud, terraform
+apply, deploys, sudo), do NOT attempt it and do NOT work around it. Instead:
+  1. Finish everything you CAN do locally first, and leave a ready-to-ship
+     artifact: commit your work to a local branch (or write a patch) so the
+     privileged step only has to transmit it, not redo it.
+  2. Append a concrete, reviewable entry to ./PRIVILEGED.md (create it if missing;
+     it lives in /workspace and is consumed later by a separate monitored
+     privileged session). One block per action, newest at the bottom, in this
+     exact format:
+
+       ## [ ] <short title>
+       - **Why:** <one line: why it needs privilege>
+       - **cwd:** `<dir>`
+       - **Artifact:** <local branch / patch file, or "none">
+       - **Run:**
+         ```bash
+         <exact, paste-ready command(s)>
+         ```
+
+     Log exact commands, never prose — the privileged session reviews and runs
+     them as-is, then changes [ ] to [x]. Group an artifact and the command that
+     ships it into one entry (e.g. commit to a branch, then `git push` + PR).
+  3. In your final summary, tell the user you queued actions in PRIVILEGED.md.
+
 Mention this sandbox context when it's relevant to what the user asks.
 EOF
 )
