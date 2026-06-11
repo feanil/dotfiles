@@ -42,11 +42,13 @@ ln -sf ~/src/feanil/dotfiles/tmux.conf ~/.tmux.conf
 Claude Code
 ===========
 
-Global instructions for Claude Code live in `claude/CLAUDE.md`. Symlink it into
-`~/.claude/` so Claude picks it up across all projects:
+Global instructions for Claude Code live in `claude/CLAUDE.md` and global settings
+(permission allowlist, model, plugins) live in `claude/settings.json`. Symlink them
+into `~/.claude/` so Claude picks them up across all projects:
 
 ```
 ln -sf ~/src/feanil/dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
+ln -sf ~/src/feanil/dotfiles/claude/settings.json ~/.claude/settings.json
 ```
 
 Install HomeBrew
