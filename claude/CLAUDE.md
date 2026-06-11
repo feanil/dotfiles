@@ -14,8 +14,9 @@ directory.
   CI configuration itself may have a bug (wrong settings, missing test coverage,
   etc.) that allowed the issue through.
 - Where possible use tools such as Read and Search before bash.
-- The bash tools preserves the folder you're in between commands.
 - Avoid combining bash commands with && or || unless it's absolutely necessary.
+- Always run `cd ` commands separately from other commands.
+    - The bash tools preserves the folder you're in between tool calls.
 
 ## Git Workflow Preferences
 
