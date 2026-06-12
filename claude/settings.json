@@ -68,6 +68,19 @@
       "Bash(.venv/bin/ruff check *)"
     ]
   },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/feanil/src/feanil/dotfiles/claude/hooks/gh-readonly.py"
+          }
+        ]
+      }
+    ]
+  },
   "model": "claude-fable-5[1m]",
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": true,
