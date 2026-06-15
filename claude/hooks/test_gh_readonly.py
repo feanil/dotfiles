@@ -32,6 +32,10 @@ ALLOWED = [
     "gh api repos/o/r -X GET -f q=test",
     "git log --oneline -5 && gh api repos/o/r/pulls/1",
     "gh pr checks 123 && gh api repos/o/r/commits/abc/check-runs",
+    "gh api repos/o/.github/contents/.github/ISSUE_TEMPLATE/x.yml --jq '.content' | base64 -d",
+    "gh api repos/o/r/contents/README.md --jq '.sha' | sha256sum",
+    "gh api repos/o/r | diff - /tmp/prev.json",
+    "gh api repos/o/r/git/blobs/abc --jq '.content' | base64 -d | hexdump -C | head",
 ]
 
 REJECTED = [
@@ -55,6 +59,10 @@ REJECTED = [
     "gh api repos/o/r\nrm -rf /tmp/x",
     "gh api repos/o/r | sort -o /etc/passwd",
     "gh api repos/o/r 'unbalanced",
+    # xargs / sed / find -exec can invoke arbitrary commands; keep prompting.
+    "gh api repos/o/r/issues --jq '.[].number' | xargs -I{} echo {}",
+    "gh api repos/o/r | sed -i 's/foo/bar/' /etc/hosts",
+    "gh api repos/o/r | awk '{print $1}'",
 ]
 
 

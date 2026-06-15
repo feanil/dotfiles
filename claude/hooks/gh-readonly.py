@@ -10,8 +10,14 @@ import sys
 SEPARATORS = {"|", ";", "&&", "||"}
 
 SAFE_UTILS = {
-    "jq", "head", "tail", "grep", "sort", "uniq", "wc", "cut", "tr",
-    "cat", "echo", "printf", "ls", "cd", "date", "which", "column",
+    "jq", "head", "tail", "grep", "egrep", "fgrep", "rg",
+    "sort", "uniq", "wc", "cut", "tr", "paste", "tac", "rev",
+    "cat", "nl", "fold", "fmt", "comm", "cmp", "diff",
+    "expand", "unexpand", "numfmt", "pr", "seq",
+    "stat", "strings", "hexdump", "od",
+    "base64", "sha256sum", "sha1sum", "md5sum",
+    "echo", "printf", "ls", "cd", "date", "which", "column",
+    "basename", "dirname", "realpath", "readlink", "tree",
 }
 
 GIT_RO_SUBCOMMANDS = {
