@@ -30,6 +30,46 @@ directory.
 - Include links to relevant source code, documentation, or version comparisons in
   commit messages when explaining why changes were made.
 
+## Commit Message Format
+
+Follow [OEP-51 conventional commits](https://docs.openedx.org/projects/openedx-proposals/en/latest/best-practices/oep-0051-bp-conventional-commits.html)
+for all repos, not just openedx. Format: `<type>: <subject>\n\n<body>\n\n<footer>`.
+Breaking changes use `!` (e.g., `feat!: drop python 3.8 support`).
+
+**Types** (priority order; when a commit mixes types, use the highest-priority one
+that applies):
+
+- `revert` — undo a previous commit (include the prior commit message)
+- `feat` — new feature or change to the feature set; includes public API changes
+- `fix` — bug fix, security fix, or behavior change to an existing feature
+- `perf` — performance improvement
+- `docs` — docs-only (docs *for* other work belong in that work's commit)
+- `test` — tests-only (same rule)
+- `build` — CI, Makefile, tox.ini, packaging, release tooling
+- `refactor` — no consumer-visible behavior change
+- `style` — code styling only
+- `chore` — repetitive mechanical work (requirements bumps, translations)
+- `temp` — short-lived experimental change that will still be merged
+
+**feat vs fix**: `feat` *adds* to the feature set; `fix` changes how an existing
+feature *behaves*.
+
+**Subject**: ~70 chars or fewer; no Jira/GitHub issue numbers in the subject —
+links go in the body.
+
+**Body**: explain the *why*. Reference public issues here. Footers use git
+trailer format:
+- `BREAKING CHANGE: <description>` — required for `<type>!` commits
+- `Co-authored-by: Name <email>` — collaboration (already standard practice here)
+- `Private-ref: <link>` — the only allowed place for links to private trackers
+
+**Dep bumps**: if a pinned-dep upgrade pulls in a feat or fix, label the commit
+`feat`/`fix` (not `chore`) so the change stays discoverable in the log.
+
+**`squash!`/`fixup!` vs `temp`**: use git's `squash!`/`fixup!` when the *commit*
+is meant to be squashed away; use `temp` when the *change* is short-lived but
+will merge as-is.
+
 ## GitHub CLI Notes
 
 When processing JSON output from `gh` commands, prefer the built-in `--jq` flag
