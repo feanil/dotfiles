@@ -51,6 +51,19 @@ ln -sf ~/src/feanil/dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -sf ~/src/feanil/dotfiles/claude/settings.json ~/.claude/settings.json
 ```
 
+`claude/hooks/gh-readonly.py` is a PreToolUse hook that auto-approves read-only
+`gh api` calls (registered in `claude/settings.json`). Tests live alongside it:
+
+```
+cd claude/hooks && uv run test_gh_readonly.py
+```
+
+`config/shellrc/claude_sandbox/` is a credential-isolated Docker sandbox for
+running Claude Code; see its own `CLAUDE.md` for details.
+
+`CLAUDE.md` at the repo root is a symlink to this README, so project-level
+guidance for Claude Code stays in sync with what humans read.
+
 Install HomeBrew
 ================
 
