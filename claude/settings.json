@@ -81,7 +81,6 @@
       }
     ]
   },
-  "model": "claude-fable-5[1m]",
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": true,
     "code-review@claude-plugins-official": true
