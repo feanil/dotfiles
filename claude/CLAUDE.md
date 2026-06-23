@@ -21,10 +21,26 @@ directory.
 ## Git Workflow Preferences
 
 - Prefer fixup commits (`git commit --fixup=<sha>`) for related changes rather than
-  creating separate commits. I'll run the interactive rebase (`git rebase -i --autosquash`)
-  myself.
-- Don't attempt interactive git operations (rebase -i, add -i) as they require an
-  editor Claude can't interact with.
+  creating separate commits.
+- Claude may run interactive rebases (autosquash, reword, etc.) using the
+  non-interactive editor technique below, but must first explain the plan
+  (which commits move, what messages change, what scripts will run) and wait
+  for explicit confirmation before invoking `git rebase`. After confirmation,
+  also force-push needs the usual force-push confirmation.
+  - `GIT_SEQUENCE_EDITOR` runs against the rebase todo file. E.g.
+    `GIT_SEQUENCE_EDITOR='sed -i "1s/^pick/reword/"'` flips the first commit
+    from `pick` to `reword`.
+  - `GIT_EDITOR` runs against each commit-msg buffer. Point it at a small
+    script that overwrites `$1` (the buffer path) with a prepared message
+    file, e.g. `#!/bin/bash\ncp /tmp/new_msg.txt "$1"`.
+  - Pass `-i` to `git rebase` — without it, `--autosquash` is silently ignored
+    and `GIT_SEQUENCE_EDITOR` is not invoked.
+  - Clean up the temp scripts after the rebase; an orphaned `GIT_EDITOR`
+    script could clobber a later commit's message buffer if reused.
+- `git add -i` and `git add -p` both need an interactive TTY — skip both.
+  Stage files by explicit pathspec (`git add path/to/file`). For partial-file
+  staging, edit the file directly so `git add <file>` stages only what you
+  intend, or write a patch and apply it with `git apply --cached`.
 - When running git commands in a repo, `cd` into the repo directory first rather than
   using `git -C <path>` on every invocation.
 - Include links to relevant source code, documentation, or version comparisons in
