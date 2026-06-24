@@ -87,5 +87,6 @@
   },
   "theme": "dark",
   "verbose": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "skipWorkflowUsageWarning": false
 }
