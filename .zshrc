@@ -89,21 +89,19 @@ PYTHON_VENV_NAMES=".venv venv"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-    git
-    tmux
-    fzf
     brew
+    fzf
+    git
+    kitty
     nvm
     python
+    tmux
     uv
-    virtualenvwrapper
-    kitty
 )
 
 zstyle ':omz:plugins:nvm' autoload yes
 
 ZSH_TMUX_AUTOSTART=true
-export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3.12
 
 source $ZSH/oh-my-zsh.sh
 
@@ -125,7 +123,7 @@ export LANG=en_US.UTF-8
 export EDITOR=nvim
 export LESS=-FRX
 
-
+alias cat=batcat
 alias vim=nvim
 alias open=xdg-open
 alias copy=xclip -selection clipboard
