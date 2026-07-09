@@ -85,8 +85,9 @@
     "pyright-lsp@claude-plugins-official": true,
     "code-review@claude-plugins-official": true
   },
+  "skipWorkflowUsageWarning": false,
   "theme": "dark",
   "verbose": true,
   "skipAutoPermissionPrompt": true,
-  "skipWorkflowUsageWarning": false
+  "tui": "fullscreen"
 }
