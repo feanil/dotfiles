@@ -1,4 +1,10 @@
 {
+  "env": {
+    "DO_NOT_TRACK": "1",
+    "DISABLE_TELEMETRY": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "DISABLE_AUTOUPDATER": "1"
+  },
   "permissions": {
     "allow": [
       "Bash(git status *)",
@@ -84,12 +90,6 @@
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": false,
     "code-review@claude-plugins-official": false
-  },
-  "env": {
-    "DO_NOT_TRACK": "1",
-    "DISABLE_TELEMETRY": "1",
-    "DISABLE_ERROR_REPORTING": "1",
-    "DISABLE_AUTOUPDATER": "1"
   },
   "tui": "default",
   "skipWorkflowUsageWarning": false,
