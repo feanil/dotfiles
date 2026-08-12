@@ -1,6 +1,8 @@
 For multi-session projects, context is tracked via `CLAUDE.md` files in the project
 directory.
 
+PRIME DIRECTIVE: Run multiple commands rather than joining things with `&&`
+
 ## General Development Notes
 
 - Prefer many smaller commits to one big commit for making changes. The goal is
