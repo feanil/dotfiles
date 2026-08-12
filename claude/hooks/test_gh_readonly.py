@@ -36,6 +36,10 @@ ALLOWED = [
     "gh api repos/o/r/contents/README.md --jq '.sha' | sha256sum",
     "gh api repos/o/r | diff - /tmp/prev.json",
     "gh api repos/o/r/git/blobs/abc --jq '.content' | base64 -d | hexdump -C | head",
+    # multi-line: every line checked on its own
+    'echo "=== reviews ==="\ngh api repos/o/r/pulls/1/reviews --jq \'.[].body\' 2>&1',
+    "gh api repos/o/r/pulls/1/comments\n\ngh api repos/o/r/issues/1/comments",
+    'echo "=== a ==="\ngh api repos/o/r/pulls/1/comments --jq \'.[] | "\\(.user.login) on \\(.path):\\(.line // .original_line)\\n\\(.body)"\' 2>&1\necho ""\ngh api repos/o/r/issues/1/comments --jq \'.[] | "\\(.user.login):\\n\\(.body)"\' 2>&1',
 ]
 
 REJECTED = [
@@ -56,7 +60,15 @@ REJECTED = [
     "gh api repos/o/r | tee /tmp/out.json",
     'echo "$(rm -rf /tmp/x)"; gh api repos/o/r',
     "gh api repos/o/r `rm x`",
+    # multi-line must not let an unsafe line ride along on a safe one
     "gh api repos/o/r\nrm -rf /tmp/x",
+    "echo hi\nrm -rf /tmp/x\ngh api repos/o/r/pulls/1/comments",
+    'gh api repos/o/r/pulls/1/comments\ngh api repos/o/r/pulls/1/reviews -X POST -f event=APPROVE',
+    "gh api repos/o/r/pulls/1/comments\ngh api repos/o/r > /tmp/out.json",
+    # a real newline inside a quoted string leaves both fragments unbalanced
+    'echo "a\nb"; gh api repos/o/r',
+    # backslash continuation: the next line is not a known-safe utility
+    "gh api repos/o/r/pulls/1/comments \\\n--jq '.[].body'",
     "gh api repos/o/r | sort -o /etc/passwd",
     "gh api repos/o/r 'unbalanced",
     # xargs / sed / find -exec can invoke arbitrary commands; keep prompting.

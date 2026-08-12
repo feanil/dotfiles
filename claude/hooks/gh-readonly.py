@@ -166,13 +166,9 @@ def is_safe_segment(tokens):
     return first in SAFE_UTILS
 
 
-def command_is_safe(command):
-    # Constructs we can't reason about: command substitution (even inside
-    # double quotes), backticks, and multi-line commands.
-    if "$(" in command or "`" in command or "\n" in command:
-        return False
+def line_is_safe(line):
     try:
-        tokens = tokenize(command)
+        tokens = tokenize(line)
     except ValueError:
         return False
     tokens = strip_safe_redirects(tokens)
@@ -182,6 +178,24 @@ def command_is_safe(command):
         if tok not in SEPARATORS and tok and all(c in "();<>|&" for c in tok):
             return False
     return all(is_safe_segment(seg) for seg in split_segments(tokens))
+
+
+def command_is_safe(command):
+    # Constructs we can't reason about: command substitution (even inside
+    # double quotes) and backticks.
+    if "$(" in command or "`" in command:
+        return False
+    # Newlines separate commands, but shlex treats them as plain whitespace and
+    # would glue every line into a single segment -- making `echo hi\nrm -rf /`
+    # look like one safe `echo`. So check each line on its own. Constructs that
+    # legitimately span lines fail closed: a newline inside a quoted string
+    # leaves both fragments unbalanced (tokenize raises), and a backslash
+    # continuation leaves the next line starting with a flag or bare argument
+    # that is not a known-safe utility.
+    lines = [line for line in command.split("\n") if line.strip()]
+    if not lines:
+        return False
+    return all(line_is_safe(line) for line in lines)
 
 
 def main():
