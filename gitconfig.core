@@ -62,3 +62,5 @@
 
 [tag]
     gpgsign = true
+[credential "https://git.heroku.com"]
+	helper = !heroku git:credentials

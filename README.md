@@ -70,7 +70,7 @@ Install HomeBrew
 https://brew.sh/
 
 ```
-brew install mcfly delta uv
+brew install mcfly delta uv gh
 ```
 
 Setup Python and Virtualenvwrapper
@@ -80,6 +80,8 @@ Install uv - https://github.com/astral-sh/uv
 
 Setup python versions
 
+`uv python install ...`
+`uv venv .venv --seed --python ...`
 
 mcfly
 =====
