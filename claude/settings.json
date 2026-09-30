@@ -91,6 +91,14 @@
     "pyright-lsp@claude-plugins-official": false,
     "code-review@claude-plugins-official": false
   },
+  "extraKnownMarketplaces": {
+    "i-have-adhd": {
+      "source": {
+        "source": "github",
+        "repo": "ayghri/i-have-adhd"
+      }
+    }
+  },
   "tui": "default",
   "skipWorkflowUsageWarning": false,
   "theme": "dark",
