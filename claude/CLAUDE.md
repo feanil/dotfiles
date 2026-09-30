@@ -2,8 +2,6 @@ For multi-session projects, track project state in the project's `CLAUDE.md`: on
 what the next session needs to pick up where this one left off. Detail goes in the
 files it links to.
 
-PRIME DIRECTIVE: Run multiple commands rather than joining things with `&&`
-
 ## General Development Notes
 
 - Prefer many smaller commits to one big commit for making changes. The goal is
@@ -16,8 +14,9 @@ PRIME DIRECTIVE: Run multiple commands rather than joining things with `&&`
 - When a CI check should have caught an issue but didn't, investigate why. The
   CI configuration itself may have a bug (wrong settings, missing test coverage,
   etc.) that allowed the issue through.
-- Where possible use tools such as Read and Search before bash.
-- Avoid combining bash commands with && or || unless it's absolutely necessary.
+- Where possible use the dedicated file tools (Read, Edit) before bash.
+- Run each shell command as its own Bash call; don't chain with `&&` or `||`
+  unless it is necessary.
 - Always run `cd ` commands separately from other commands.
     - The bash tools preserves the folder you're in between tool calls.
 
