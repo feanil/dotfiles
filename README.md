@@ -49,7 +49,17 @@ into `~/.claude/` so Claude picks them up across all projects:
 ```
 ln -sf ~/src/feanil/dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -sf ~/src/feanil/dotfiles/claude/settings.json ~/.claude/settings.json
+ln -sfn ~/src/feanil/dotfiles/claude/skills ~/.claude/skills
 ```
+
+`claude/skills/` holds personal skills, available in every project. The whole
+directory is symlinked rather than each skill, so a new one is picked up without
+touching `~/.claude`. Each skill is a directory with a `SKILL.md`; Claude loads
+one when a task matches its `description`, so that line is what makes it fire.
+
+- `pr-review-drafts` - building, updating and submitting draft (PENDING) GitHub
+  pull request reviews over the API, plus `scripts/anchors.py` for turning a PR
+  diff into the `line` / `side` anchors a review comment needs.
 
 `claude/hooks/gh-readonly.py` is a PreToolUse hook that auto-approves read-only
 `gh api` calls (registered in `claude/settings.json`). Tests live alongside it:

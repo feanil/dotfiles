@@ -115,39 +115,40 @@ gh api repos/OWNER/REPO/pulls/NUMBER -X PATCH -f body="new body content"
 
 ## PR Review Preferences
 
-- Always create reviews as **pending drafts** so I can edit before submitting.
-  Omit the `event` field when calling `POST /repos/.../pulls/.../reviews` — this
-  creates a `PENDING` review. Do NOT use `event: "COMMENT"` as that submits immediately.
-- **Never post standalone PR comments** (e.g., `gh pr comment`, `POST /pulls/.../comments`,
-  or `POST /issues/.../comments`). All feedback must go through the pending review mechanism above.
-- Only one pending review per PR is allowed. Before creating a new review, check for and
-  delete any existing pending review: `gh api repos/OWNER/REPO/pulls/NUMBER/reviews --jq '.[] | select(.state == "PENDING") | .id'`
-  then `gh api repos/OWNER/REPO/pulls/NUMBER/reviews/REVIEW_ID -X DELETE`.
+- **Write anything posted under my name in my voice.** Review summaries, inline
+  comments, replies to authors, PR descriptions, and issues filed on my behalf
+  all get drafted from
+  `/home/feanil/src/hacking/claude/my_voice/writing-style.md`. Read that file
+  before drafting the prose — not from memory, and not as a polish pass
+  afterwards.
+- Always create reviews as **pending drafts** so I can edit before submitting. Never pass
+  an `event` when creating one; that submits it immediately.
+- **Never post standalone PR comments** (e.g., `gh pr comment`, `POST /issues/.../comments`,
+  or any call that publishes without going through a pending review). All feedback must go
+  through the pending review, replies included.
+- Only one pending review per PR is allowed, so **add to the existing one rather than
+  replacing it**. Find it with
+  `gh api repos/OWNER/REPO/pulls/NUMBER/reviews --jq '.[] | select(.state == "PENDING") | .id'`,
+  then append with `addPullRequestReviewThread` / `addPullRequestReviewThreadReply`. Do not
+  delete and recreate a pending review — that was only ever a workaround for REST being
+  unable to append, it loses my edits, and it is no longer necessary.
+- **Read anything in full before deleting it**, whether that is one staged comment or a
+  whole review. Deleting is permanent — there is no undelete, and any comment I edited in
+  the GitHub UI is lost with it. Fetch the bodies first
+  (`gh api repos/OWNER/REPO/pulls/NUMBER/reviews/REVIEW_ID/comments`, without narrowing
+  `--jq` and comparing parsed JSON, since bodies contain newlines), diff them against what
+  was last posted, and carry my edits through verbatim. Restoring stripped markdown fencing
+  is fine; rewording is not. Where my wording and yours disagree, mine wins.
 
-### Inline review comments (position-based)
+### Inline review comments
 
-Inline comments must use `position` (diff-relative line number), not `line`+`side` — the
-`line`/`side` params are silently ignored in the review create endpoint.
+Mechanics live in the **`pr-review-drafts` skill** (`claude/skills/pr-review-drafts/`):
+the exact GraphQL and REST calls for creating a draft review, appending to one that
+already exists, replying on a thread, dropping or rewording a staged comment, editing
+the body and submitting - plus `scripts/anchors.py`, which turns a PR diff into the
+`line` / `side` anchors a comment needs.
 
-`position` counts from 1 at the first `@@` hunk header of the file's diff, incrementing
-for every line (hunk headers, context lines, additions, and deletions all count).
-
-Pass comments as a JSON file via `--input` to avoid heredoc/redirect issues:
-
-```bash
-gh api repositories/REPO_ID/pulls/NUMBER/reviews -X POST --input /tmp/review.json --jq '{id: .id, state: .state}'
-```
-
-Use the numeric repository ID (e.g. `repositories/10391073/...`) instead of
-`repos/OWNER/REPO/...` to avoid 307 redirect failures with `--input`.
-
-JSON structure:
-```json
-{
-  "commit_id": "<head sha>",
-  "body": "",
-  "comments": [
-    {"path": "path/to/file.py", "position": 42, "body": "comment text"}
-  ]
-}
-```
+Two things worth knowing without opening it. Reviews are built in GraphQL and anchored
+by **file line**, not by diff `position`; the two coincide only in a wholly new file.
+And a draft is **edited in place** - there is no delete-and-recreate, so my edits to a
+staged review are never thrown away.
