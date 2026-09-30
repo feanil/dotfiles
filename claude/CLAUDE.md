@@ -1,5 +1,6 @@
-For multi-session projects, context is tracked via `CLAUDE.md` files in the project
-directory.
+For multi-session projects, track project state in the project's `CLAUDE.md`: only
+what the next session needs to pick up where this one left off. Detail goes in the
+files it links to.
 
 PRIME DIRECTIVE: Run multiple commands rather than joining things with `&&`
 
