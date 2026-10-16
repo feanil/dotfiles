@@ -89,7 +89,8 @@
   },
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": false,
-    "code-review@claude-plugins-official": false
+    "code-review@claude-plugins-official": false,
+    "i-have-adhd@i-have-adhd": true
   },
   "extraKnownMarketplaces": {
     "i-have-adhd": {
@@ -103,5 +104,6 @@
   "skipWorkflowUsageWarning": false,
   "theme": "dark",
   "verbose": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "model": "claude-fable-5-1[1m]"
 }
