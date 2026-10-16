@@ -1,6 +1,6 @@
 ---
 name: ghsa-advisory-api
-description: Read and write GitHub repository security advisories (GHSA) through the REST API with gh - list and read advisories and their comments, create a draft, open the temporary private fork, PATCH the CVSS vector, CWE ids, affected/patched versions, credits and description, request a CVE, close or publish. Use whenever a task touches a security advisory programmatically; it carries the field quirks that the REST docs do not state.
+description: Read and write GitHub repository security advisories (GHSA) through the REST API with gh - list and read advisories and their comments, create a draft, open and work in the temporary private fork (remote naming, push retries, pre-merge refresh, the fast-forward fallback when its merge button breaks), PATCH the CVSS vector, CWE ids, affected/patched versions, credits and description, link the landed fix commits in a Patches section, request a CVE, close or publish. Use whenever a task touches a security advisory programmatically; it carries the field quirks that the REST docs do not state.
 ---
 
 # Repository security advisories over the GitHub API
@@ -111,6 +111,65 @@ uvx --from cvss python -c "from cvss import CVSS4; c=CVSS4('CVSS:4.0/AV:N/AC:L/A
 - Set `patched_versions` to the development branch name when the main fix PR
   opens and widen to the range when the backports open.
 
+## Linking fix commits
+
+A published advisory must point at the code that fixes it, or operators have
+to guess which commit on which branch is the fix. Do this **after** the fix
+has landed on the public branches and **before** publishing: the temporary
+fork and its SHAs disappear at publication, and fork SHAs are not the ones
+that end up on the public branches anyway. Every advisory gets a
+`### Patches` section in its description:
+
+```markdown
+### Patches
+The fix landed in the following commits:
+
+* `master`: [a182ff5d50](https://github.com/OWNER/REPO/commit/<full 40-char sha>)
+* `release/newer`: [f657d158c2](https://github.com/OWNER/REPO/commit/<full 40-char sha>)
+* `release/older`: [c99de016f1](https://github.com/OWNER/REPO/commit/<full 40-char sha>)
+```
+
+Conventions, each learned the hard way:
+
+- One bullet per branch the fix actually landed on: the development branch
+  first, then release branches newest to oldest. Link text is the 10-char
+  short SHA; the href carries the **full** SHA so it never goes ambiguous.
+- Use the repository's **current** name in the URLs. Old names redirect,
+  but new links should not depend on that.
+- If the description still has GitHub's unfilled template placeholder
+  (`_Has the problem been patched? ..._` under `### Patches`), replace that
+  line rather than appending a second Patches section.
+- Cite the **commit that carries the change**. Where a fix landed as a
+  two-parent "Merge commit from fork", cite the underlying fix commit (the
+  second parent), not the merge. A single-parent squash titled "Merge
+  commit from fork" *is* the fix; cite it directly.
+- When a branch needed more than one commit, cite each one in order, so an
+  operator cherry-picking by hand knows the full set.
+- For a package repo, list the package fix commits with their released
+  versions, then the consumer pin-bump commits.
+- Update `patched_versions` in the same pass, as a range from the earliest
+  patched release (see above). A branch that merely *contains* the fix
+  because it was cut after the fix landed counts as patched.
+
+Verify each SHA is really on its public branch before writing it:
+
+```bash
+git fetch origin
+git merge-base --is-ancestor <sha> origin/<branch> && echo yes
+```
+
+To find the fix commits for an advisory that never recorded them:
+
+```bash
+git log --all --oneline --grep='GHSA-xxxx-xxxx-xxxx'   # fork merges carry the id
+git log --all --oneline -S'<symbol from the report>' -- path/to/file
+git branch -r --contains <sha>                          # which branches have it
+```
+
+PATCHing a **published** advisory works the same as a draft, but nested
+fields still need `--input`, and a stored invalid `ecosystem` will 422 until
+it is resent as a valid value.
+
 ## Credits
 
 - Write `credits: [{"login": "someone", "type": "reporter"}]`. Valid types
@@ -159,13 +218,64 @@ and its SHAs disappear at publication.
   public release branch to the fork at the same SHA first.
 - Some forks cannot be deleted via the API (`403 Must have admin rights`);
   they disappear at publication or via the advisory page.
-- The fork's merge button is broken on and off (a recurring GitHub bug);
-  the fallback is a direct fast-forward push of the reviewed commits to the
-  public branches. Button merges land as single-parent squashes titled
-  "Merge commit from fork", which conventional-commit tooling such as
-  python-semantic-release cannot parse.
+- Button merges land as single-parent squashes titled "Merge commit from
+  fork", which conventional-commit tooling such as python-semantic-release
+  cannot parse.
 - GitHub Actions do not run on the fork, so the PR-level status checks you
   rely on upstream (CLA bot, CI) never report there.
+
+### Working in the fork from a clone
+
+- **Name the remote after the advisory.** One clone of the upstream repo
+  often carries several advisory forks at once; a generic name such as
+  `advisory-fork` collides on the second one.
+
+  ```bash
+  git remote add ghsa-xxxx-xxxx-xxxx git@github.com:OWNER/REPO-ghsa-xxxx-xxxx-xxxx.git
+  ```
+
+- **Push retries.** On a remote read error or `commit_refs` failure, wait
+  ten minutes and retry once. If it fails again, report and stop; no tight
+  retry loops.
+- **Keep the fork's base branches current.** Fast-forward the fork's copy
+  of each base branch to the public head before pushing a PR branch, so the
+  PR diff shows only the fix and not every intervening upstream commit:
+
+  ```bash
+  git fetch origin
+  git push ghsa-xxxx-xxxx-xxxx origin/master:master
+  git push ghsa-xxxx-xxxx-xxxx origin/release/<name>:release/<name>
+  ```
+
+- **Pre-merge refresh.** Fork PRs go stale while they wait for review and
+  disclosure (one sat 131 commits behind). On merge day, before anything
+  lands: fast-forward the fork bases as above, rebase each PR branch onto
+  its refreshed base, re-run the targeted tests, force-push with
+  `--force-with-lease`, and record the new SHAs. A force-push does not
+  dismiss an existing approval.
+
+### When the merge button is broken
+
+The fork's merge button fails on and off (a recurring GitHub bug; branch
+staleness is a red herring). The fallback is a **plain fast-forward push**
+of the reviewed commits straight to the public branches, with admin bypass
+of branch protection. Never `--force`: a non-force push is fast-forward
+only, so a public branch that moved is rejected rather than clobbered.
+
+```bash
+git fetch origin
+# the reviewed branch must sit exactly on top of the public head
+git merge-base --is-ancestor origin/<branch> <reviewed-branch> && echo ff-ok
+git log --oneline origin/<branch>..<reviewed-branch>   # expect only the fix commit(s)
+git push origin <reviewed-branch>:<branch>
+```
+
+If the public branch has moved past the fork base, rebase the reviewed
+branch onto `origin/<branch>` first and re-run the targeted tests on the
+rebased commit; the SHA that lands is the rebased one. Afterwards confirm
+each landed SHA with `git merge-base --is-ancestor <sha> origin/<branch>`
+and close the now-redundant fork PRs. The fork PRs stay `OPEN` on the fork
+when a fix lands this way; that is expected.
 
 ## Creating a draft
 
