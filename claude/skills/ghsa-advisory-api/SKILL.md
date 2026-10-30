@@ -35,6 +35,7 @@ this skill covers the mechanics only.
 | List a repo's advisories (duplicate check) | `GET /repos/O/R/security-advisories --paginate` (`?state=draft|triage|published|closed`) |
 | Read one | `GET /repos/O/R/security-advisories/GHSA-…` |
 | Read its comments | `GET /repos/O/R/security-advisories/GHSA-…/comments` |
+| Post a comment | `POST /repos/O/R/security-advisories/GHSA-…/comments -F body=@file.md` |
 | Create a draft | `POST /repos/O/R/security-advisories --input body.json` |
 | Open the temporary private fork | `POST /repos/O/R/security-advisories/GHSA-…/forks` |
 | Change any field | `PATCH /repos/O/R/security-advisories/GHSA-… --input patch.json` |
@@ -190,9 +191,16 @@ it is resent as a valid value.
 before telling anyone you cannot see them; a `404` once seen on this path was
 not explained and should be retried, not taken as "no endpoint".
 
-Posting a comment through the API (`POST` to the same path) has not been
-tried. Until it is, treat "post this as a comment on the advisory" as a
-manual step: hand over the text, the human posts it in the UI.
+Post a comment with `POST` to the same path, body from a file so markdown
+survives. It works on a `closed` advisory too (verified 2026-10).
+
+```bash
+gh api repos/OWNER/REPO/security-advisories/GHSA-xxxx-xxxx-xxxx/comments \
+  -X POST -F body=@comment.md --jq .html_url
+```
+
+A comment is visible to every collaborator on the advisory, so it needs the
+same sign-off as any other write.
 
 ## States
 
