@@ -104,6 +104,5 @@
   "skipWorkflowUsageWarning": false,
   "theme": "dark",
   "verbose": true,
-  "skipAutoPermissionPrompt": true,
-  "model": "claude-fable-5-1[1m]"
+  "skipAutoPermissionPrompt": true
 }
