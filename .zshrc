@@ -162,3 +162,7 @@ export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:/usr/local/lib/x86_64-linux-gnu/pkgco
 
 TUTOR_ROOT=/home/feanil/src/tutor/.venv/bin/tutor-main
 TUTOR_PLUGINS_ROOT=/home/feanil/src/tutor/.venv/bin/tutor-main-plugins
+
+# Machine-specific settings that don't belong in the repo (e.g. ANTHROPIC_MODEL).
+# Sourced last so it can override anything above.
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local

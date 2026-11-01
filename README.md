@@ -43,13 +43,21 @@ Claude Code
 ===========
 
 Global instructions for Claude Code live in `claude/CLAUDE.md` and global settings
-(permission allowlist, model, plugins) live in `claude/settings.json`. Symlink them
+(permission allowlist, plugins) live in `claude/settings.json`. Symlink them
 into `~/.claude/` so Claude picks them up across all projects:
 
 ```
 ln -sf ~/src/feanil/dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -sf ~/src/feanil/dotfiles/claude/settings.json ~/.claude/settings.json
 ln -sfn ~/src/feanil/dotfiles/claude/skills ~/.claude/skills
+```
+
+The model is deliberately left out of `claude/settings.json` so it can differ per
+machine. Personal machines use Claude Code's default model. On work machines, set
+it in `~/.zshrc.local` (sourced at the end of `.zshrc`, not checked in):
+
+```
+export ANTHROPIC_MODEL='claude-fable-5-1[1m]'
 ```
 
 `claude/skills/` holds personal skills, available in every project. The whole
