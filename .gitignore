@@ -1,2 +1,4 @@
 *~
 __pycache__/
+# Org skills Claude Code syncs into ~/.claude/skills (symlinked to claude/skills)
+claude/skills/synced/
