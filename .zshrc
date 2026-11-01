@@ -97,6 +97,7 @@ plugins=(
     python
     tmux
     uv
+    uv-env
 )
 
 zstyle ':omz:plugins:nvm' autoload yes
