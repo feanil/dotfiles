@@ -85,6 +85,17 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/feanil/src/feanil/dotfiles/claude/hooks/workdesk-status.sh"
+          }
+        ]
+      }
     ]
   },
   "enabledPlugins": {
