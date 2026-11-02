@@ -1,0 +1,5 @@
+{
+  "name": "feanil",
+  "version": "0.1.0",
+  "description": "Feanil's generic skills: draft PR reviews over the GitHub API, GitHub security advisories over the API, CVSS 4.0 scoring, git history editing."
+}

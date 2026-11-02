@@ -60,14 +60,35 @@ it in `~/.zshrc.local` (sourced at the end of `.zshrc`, not checked in):
 export ANTHROPIC_MODEL='claude-fable-5-1[1m]'
 ```
 
-`claude/skills/` holds personal skills, available in every project. The whole
-directory is symlinked rather than each skill, so a new one is picked up without
-touching `~/.claude`. Each skill is a directory with a `SKILL.md`; Claude loads
-one when a task matches its `description`, so that line is what makes it fire.
+`claude/skills/` is what `~/.claude/skills` points at. It holds the `feanil`
+plugin (`claude/skills/feanil/`): a skills-directory plugin, which Claude
+Code loads in every session as `feanil@skills-dir` with no install step, so
+a new skill under `claude/skills/feanil/skills/` is picked up without
+touching `~/.claude`. Skills are namespaced, `/feanil:<skill>` when invoked
+by hand; Claude loads one on its own when a task matches its `description`,
+so that line is what makes it fire.
 
 - `pr-review-drafts` - building, updating and submitting draft (PENDING) GitHub
   pull request reviews over the API, plus `scripts/anchors.py` for turning a PR
   diff into the `line` / `side` anchors a review comment needs.
+- `ghsa-advisory-api` - reading and writing repository security advisories
+  over the API, and working in their temporary private forks.
+- `cvss4-scoring` - CVSS 4.0 base scoring, with `scripts/score.py`.
+- `git-history` - fixups, autosquash, reword and partial staging without a
+  TTY, and the confirm-before-rebase rule.
+
+Evals for the skills live in `claude/skills/feanil/evals/`; run one with
+
+```
+cd claude/skills/feanil && claude plugin eval . --case <name> --runs 1 --ablation none --no-publish --trust-plugin
+```
+
+A private plugin of the same shape lives in a separate repo and is linked in
+as `claude/skills/workdesk` (gitignored).
+
+`claude/hooks/workdesk-status.sh` is a SessionStart hook that prints one line
+of work state from that private repo when it is present and nothing
+otherwise.
 
 `claude/hooks/gh-readonly.py` is a PreToolUse hook that auto-approves read-only
 `gh api` calls (registered in `claude/settings.json`). Tests live alongside it:
