@@ -2,3 +2,7 @@
 __pycache__/
 # Org skills Claude Code syncs into ~/.claude/skills (symlinked to claude/skills)
 claude/skills/synced/
+.pytest_cache/
+results/
+# the private workdesk plugin, linked in by `wd sync`
+claude/skills/workdesk
