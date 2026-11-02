@@ -15,6 +15,7 @@ bindkey -e
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 export PATH=$PATH:$HOME/.local/bin
+export PATH=$PATH:$HOME/workdesk/bin   # wd, the workdesk CLI
 export PATH=$PATH:$HOME/.yarn/bin
 
 # Path to your oh-my-zsh installation.
