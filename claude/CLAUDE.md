@@ -1,6 +1,9 @@
-For multi-session projects, track project state in the project's `CLAUDE.md`: only
-what the next session needs to pick up where this one left off. Detail goes in the
-files it links to.
+Work state lives in `~/workdesk`: one folder per item under `work/`, each with
+a `README.md` whose frontmatter and body hold what the next session needs
+(`policy/types.md` there has the schema). When the current work matches a
+tracked item, use the `work-state` skill (`/workdesk:work-state`) to resume,
+hand off, capture or check what is due. A repo's own `CLAUDE.md` holds only
+stable working rules for that repo, not state.
 
 ## General Development Notes
 
@@ -14,35 +17,45 @@ files it links to.
 - When a CI check should have caught an issue but didn't, investigate why. The
   CI configuration itself may have a bug (wrong settings, missing test coverage,
   etc.) that allowed the issue through.
+- A question is a request for information, not for a change. Answer it and
+  stop; do not edit, refactor or "improve" anything off the back of a
+  question unless I ask for the change.
 - Where possible use the dedicated file tools (Read, Edit) before bash.
 - Run each shell command as its own Bash call; don't chain with `&&` or `||`
   unless it is necessary.
 - Always run `cd ` commands separately from other commands.
     - The bash tools preserves the folder you're in between tool calls.
+- My wall-clock time is the expensive resource. Before starting anything that
+  runs for more than a few seconds (large clones, long measurements, big test
+  runs), ask whether the answer changes a decision that matters. If it only
+  settles a minor detail, pick the sensible default and move on; if it's
+  borderline, ask me whether it's worth running before kicking it off. Quick
+  scratch checks that settle a correctness question are fine.
+
+## Skills and where they live
+
+- `~/.claude/skills` is a symlink into the public `feanil/dotfiles` repo.
+  The `feanil` plugin there (`claude/skills/feanil/`, `/feanil:<skill>`)
+  holds the generic skills: `pr-review-drafts`, `ghsa-advisory-api`,
+  `cvss4-scoring`, `git-history`. Anything there must be safe for the open
+  internet: generic `OWNER/REPO` and `GHSA-xxxx` placeholders, no
+  unpublished advisory ids, PR details, tokens or private URLs. Skill
+  changes get committed there with a conventional commit scoped `claude`.
+- Private or Open edX process skills go in `~/workdesk/plugin/skills/`
+  (the `workdesk` plugin, `/workdesk:<skill>`), never in dotfiles.
 
 ## Git Workflow Preferences
 
 - Prefer fixup commits (`git commit --fixup=<sha>`) for related changes rather than
   creating separate commits.
-- Claude may run interactive rebases (autosquash, reword, etc.) using the
-  non-interactive editor technique below, but must first explain the plan
-  (which commits move, what messages change, what scripts will run) and wait
-  for explicit confirmation before invoking `git rebase`. After confirmation,
-  also force-push needs the usual force-push confirmation.
-  - `GIT_SEQUENCE_EDITOR` runs against the rebase todo file. E.g.
-    `GIT_SEQUENCE_EDITOR='sed -i "1s/^pick/reword/"'` flips the first commit
-    from `pick` to `reword`.
-  - `GIT_EDITOR` runs against each commit-msg buffer. Point it at a small
-    script that overwrites `$1` (the buffer path) with a prepared message
-    file, e.g. `#!/bin/bash\ncp /tmp/new_msg.txt "$1"`.
-  - Pass `-i` to `git rebase` — without it, `--autosquash` is silently ignored
-    and `GIT_SEQUENCE_EDITOR` is not invoked.
-  - Clean up the temp scripts after the rebase; an orphaned `GIT_EDITOR`
-    script could clobber a later commit's message buffer if reused.
-- `git add -i` and `git add -p` both need an interactive TTY — skip both.
-  Stage files by explicit pathspec (`git add path/to/file`). For partial-file
-  staging, edit the file directly so `git add <file>` stages only what you
-  intend, or write a patch and apply it with `git apply --cached`.
+- Rebases (autosquash, reword, reorder), amending and partial staging go
+  through the `git-history` skill (`/feanil:git-history`): it has the
+  non-interactive `GIT_SEQUENCE_EDITOR` / `GIT_EDITOR` technique and the
+  `git apply --cached` route, since `git add -p` and `-i` need a TTY. Before
+  any `git rebase`, explain the plan (which commits move, what messages
+  change, what scripts will run) and wait for my explicit confirmation; a
+  force-push afterwards needs its own confirmation.
+- Stage files by explicit pathspec (`git add path/to/file`).
 - When running git commands in a repo, `cd` into the repo directory first rather than
   using `git -C <path>` on every invocation.
 - Include links to relevant source code, documentation, or version comparisons in
@@ -117,38 +130,25 @@ gh api repos/OWNER/REPO/pulls/NUMBER -X PATCH -f body="new body content"
 
 - **Write anything posted under my name in my voice.** Review summaries, inline
   comments, replies to authors, PR descriptions, and issues filed on my behalf
-  all get drafted from
-  `/home/feanil/src/hacking/claude/my_voice/writing-style.md`. Read that file
-  before drafting the prose — not from memory, and not as a polish pass
-  afterwards.
+  all go through the `voice` skill (`/workdesk:voice`), which reads
+  `/home/feanil/workdesk/policy/voice.md`. Read that file before drafting the
+  prose — not from memory, and not as a polish pass afterwards.
 - Always create reviews as **pending drafts** so I can edit before submitting. Never pass
   an `event` when creating one; that submits it immediately.
 - **Never post standalone PR comments** (e.g., `gh pr comment`, `POST /issues/.../comments`,
   or any call that publishes without going through a pending review). All feedback must go
-  through the pending review, replies included.
+  through the pending review, replies included. One exception: an ask that has no inline
+  anchor in the diff goes out as a follow-up PR comment after I've submitted the review,
+  once I've approved that specific comment. Review bodies are assumed not to go out.
 - Only one pending review per PR is allowed, so **add to the existing one rather than
-  replacing it**. Find it with
-  `gh api repos/OWNER/REPO/pulls/NUMBER/reviews --jq '.[] | select(.state == "PENDING") | .id'`,
-  then append with `addPullRequestReviewThread` / `addPullRequestReviewThreadReply`. Do not
-  delete and recreate a pending review — that was only ever a workaround for REST being
-  unable to append, it loses my edits, and it is no longer necessary.
+  replacing it**. Do not delete and recreate a pending review — it loses my edits, and
+  it is no longer necessary.
 - **Read anything in full before deleting it**, whether that is one staged comment or a
   whole review. Deleting is permanent — there is no undelete, and any comment I edited in
-  the GitHub UI is lost with it. Fetch the bodies first
-  (`gh api repos/OWNER/REPO/pulls/NUMBER/reviews/REVIEW_ID/comments`, without narrowing
-  `--jq` and comparing parsed JSON, since bodies contain newlines), diff them against what
-  was last posted, and carry my edits through verbatim. Restoring stripped markdown fencing
-  is fine; rewording is not. Where my wording and yours disagree, mine wins.
-
-### Inline review comments
-
-Mechanics live in the **`pr-review-drafts` skill** (`claude/skills/pr-review-drafts/`):
-the exact GraphQL and REST calls for creating a draft review, appending to one that
-already exists, replying on a thread, dropping or rewording a staged comment, editing
-the body and submitting - plus `scripts/anchors.py`, which turns a PR diff into the
-`line` / `side` anchors a comment needs.
-
-Two things worth knowing without opening it. Reviews are built in GraphQL and anchored
-by **file line**, not by diff `position`; the two coincide only in a wholly new file.
-And a draft is **edited in place** - there is no delete-and-recreate, so my edits to a
-staged review are never thrown away.
+  the GitHub UI is lost with it. Fetch the bodies first, diff them against what was last
+  posted, and carry my edits through verbatim. Restoring stripped markdown fencing is
+  fine; rewording is not. Where my wording and yours disagree, mine wins.
+- The mechanics — creating a draft review, finding and appending to the pending
+  one, replying on a thread, line anchors, dropping or rewording a staged comment,
+  submitting — are the `pr-review-drafts` skill (`/feanil:pr-review-drafts`).
+  Reviews are built in GraphQL and anchored by **file line**, not diff `position`.
