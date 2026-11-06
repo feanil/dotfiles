@@ -30,8 +30,14 @@ sign-off; this skill only covers the mechanics.
 | List what is staged | `GET /pulls/<N>/reviews/<ID>/comments` |
 | Drop one staged comment | `DELETE /pulls/comments/<COMMENT_ID>` |
 | Reword one staged comment | drop it, then re-add it |
-| Edit the review body | `PUT /pulls/<N>/reviews/<ID>` with `{"body": …}` |
+| Edit the review body | `PUT /pulls/<N>/reviews/<ID>` with `{"body": …}`, only if the review was created with a body |
 | Submit | `POST /pulls/<N>/reviews/<ID>/events` with `{"event": "COMMENT"}` |
+
+**A review created with no body cannot be given one later.** Both `PUT /pulls/<N>/reviews/<ID>`
+and the GraphQL `updatePullRequestReview` mutation return `422 Could not edit a review with a
+missing body` on a pending review whose body is empty (measured on openedx/xblock-lti-consumer#715,
+2026-11-06). If a body may be wanted, create the review with one, even a placeholder; otherwise the
+author adds it in the submit dialog on the Files changed tab.
 
 There is **no rebuild step**, and no `position` arithmetic. Both used to be necessary only
 because REST cannot add a comment to a review that is already staged. GraphQL can, so a draft
