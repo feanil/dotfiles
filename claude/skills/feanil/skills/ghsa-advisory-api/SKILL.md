@@ -293,6 +293,7 @@ jq -n --rawfile desc body.md \
     description: $desc,
     severity: "medium",
     cwe_ids: ["CWE-862"],
+    credits: [{login: "someone", type: "reporter"}],
     vulnerabilities: [{package: {ecosystem: "pip", name: "PACKAGE"},
                        vulnerable_version_range: "TBD", patched_versions: ""}]}' > advisory.json
 gh api repos/OWNER/REPO/security-advisories -X POST --input advisory.json \
@@ -301,4 +302,6 @@ rm advisory.json
 ```
 
 `severity` may be sent on create as a placeholder band; replace it with a
-standalone vector PATCH once scored.
+standalone vector PATCH once scored. `credits` is accepted on create and
+reads back from `.credits_detailed[]` as `pending`, same as a PATCH
+(verified 2026-11). The new advisory starts in `draft`, not `triage`.
