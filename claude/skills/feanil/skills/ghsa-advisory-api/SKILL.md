@@ -304,4 +304,13 @@ rm advisory.json
 `severity` may be sent on create as a placeholder band; replace it with a
 standalone vector PATCH once scored. `credits` is accepted on create and
 reads back from `.credits_detailed[]` as `pending`, same as a PATCH
-(verified 2026-11). The new advisory starts in `draft`, not `triage`.
+(verified 2026-11).
+
+**A maintainer cannot create an advisory in `triage`.** Create has no
+`state` parameter and always lands in `draft`; PATCH `state` accepts only
+`published`, `closed` and `draft`. The one endpoint that produces `triage`,
+`POST …/security-advisories/reports`, refuses a repo admin with 403 "not
+authorized to report advisories in this repository" even with private
+vulnerability reporting enabled (verified 2026-11). A report that arrives
+by email is therefore filed as a `draft`; track its triage status outside
+GitHub.
