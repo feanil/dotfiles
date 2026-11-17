@@ -39,7 +39,7 @@ this skill covers the mechanics only.
 | Create a draft | `POST /repos/O/R/security-advisories --input body.json` |
 | Open the temporary private fork | `POST /repos/O/R/security-advisories/GHSA-…/forks` |
 | Change any field | `PATCH /repos/O/R/security-advisories/GHSA-… --input patch.json` |
-| Request a CVE | `POST /repos/O/R/security-advisories/GHSA-…/cve` (not yet exercised here) |
+| Request a CVE | `POST /repos/O/R/security-advisories/GHSA-…/cve` (returns `{}`; `cve_id` stays `null` through publication until GitHub assigns it) |
 | Close | PATCH `{"state": "closed"}` |
 | Publish | PATCH `{"state": "published"}` — irreversible |
 
@@ -282,8 +282,11 @@ If the public branch has moved past the fork base, rebase the reviewed
 branch onto `origin/<branch>` first and re-run the targeted tests on the
 rebased commit; the SHA that lands is the rebased one. Afterwards confirm
 each landed SHA with `git merge-base --is-ancestor <sha> origin/<branch>`
-and close the now-redundant fork PRs. The fork PRs stay `OPEN` on the fork
-when a fix lands this way; that is expected.
+and close the now-redundant fork PRs. They stay `OPEN` on the fork when a
+fix lands this way, and **publishing fails with 422 while any of them is
+open** ("a workspace with no open pull requests"). Close them through REST
+(`PATCH /repos/O/R-ghsa-…/pulls/N -f state=closed`); `gh pr close` tries to
+add a comment, which workspace repositories forbid.
 
 ## Creating a draft
 
