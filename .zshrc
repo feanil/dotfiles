@@ -125,7 +125,12 @@ export LANG=en_US.UTF-8
 export EDITOR=nvim
 export LESS=-FRX
 
-alias cat=batcat
+# bat is `bat` from brew but `batcat` from Debian's apt package.
+if (( $+commands[bat] )); then
+  alias cat=bat
+elif (( $+commands[batcat] )); then
+  alias cat=batcat
+fi
 alias vim=nvim
 alias open=xdg-open
 alias copy=xclip -selection clipboard
